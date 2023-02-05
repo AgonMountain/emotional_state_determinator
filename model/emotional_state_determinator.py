@@ -6,7 +6,7 @@ class EmotionalStateDeterminator():
     def __init__(self, detector):
         self.detector = detector
 
-    def calculate_angle(self, landmark1, landmark2, landmark3):
+    def __calculate_angle(self, landmark1, landmark2, landmark3):
         x1, y1, _ = landmark1
         x2, y2, _ = landmark2
         x3, y3, _ = landmark3
@@ -16,47 +16,47 @@ class EmotionalStateDeterminator():
             angle *= -1
         return angle
 
-    def ccw(self, A, B, C):
+    def __ccw(self, A, B, C):
         a_x, a_y, _ = A
         b_x, b_y, _ = B
         c_x, c_y, _ = C
         return (c_y - a_y) * (b_x - a_x) > (b_y - a_y) * (c_x - a_x)
 
-    def is_crossing_vectors(self, vec1_point1, vec1_point2, vec2_point1, vec2_point2):
-        return self.ccw(vec1_point1, vec2_point1, vec2_point2) != self.ccw(vec1_point2, vec2_point1, vec2_point2) and \
-                self.ccw(vec1_point1, vec1_point2, vec2_point1) != self.ccw(vec1_point1, vec1_point2, vec2_point2)
+    def __is_crossing_vectors(self, vec1_point1, vec1_point2, vec2_point1, vec2_point2):
+        return self.__ccw(vec1_point1, vec2_point1, vec2_point2) != self.__ccw(vec1_point2, vec2_point1, vec2_point2) and \
+                self.__ccw(vec1_point1, vec1_point2, vec2_point1) != self.__ccw(vec1_point1, vec1_point2, vec2_point2)
 
-    def get_pose_angle(self, mp_pose, landmarks):
+    def __get_pose_angle(self, mp_pose, landmarks):
         if landmarks:
-            left_elbow_angle = self.calculate_angle(landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value],
+            left_elbow_angle = self.__calculate_angle(landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value],
                                                       landmarks[mp_pose.PoseLandmark.LEFT_ELBOW.value],
                                                       landmarks[mp_pose.PoseLandmark.LEFT_WRIST.value])
 
-            right_elbow_angle = self.calculate_angle(landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER.value],
+            right_elbow_angle = self.__calculate_angle(landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER.value],
                                                        landmarks[mp_pose.PoseLandmark.RIGHT_ELBOW.value],
                                                        landmarks[mp_pose.PoseLandmark.RIGHT_WRIST.value])
 
-            left_shoulder_angle = self.calculate_angle(landmarks[mp_pose.PoseLandmark.LEFT_ELBOW.value],
+            left_shoulder_angle = self.__calculate_angle(landmarks[mp_pose.PoseLandmark.LEFT_ELBOW.value],
                                                          landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value],
                                                          landmarks[mp_pose.PoseLandmark.LEFT_HIP.value])
 
-            right_shoulder_angle = self.calculate_angle(landmarks[mp_pose.PoseLandmark.RIGHT_HIP.value],
+            right_shoulder_angle = self.__calculate_angle(landmarks[mp_pose.PoseLandmark.RIGHT_HIP.value],
                                                           landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER.value],
                                                           landmarks[mp_pose.PoseLandmark.RIGHT_ELBOW.value])
 
-            left_knee_angle = self.calculate_angle(landmarks[mp_pose.PoseLandmark.LEFT_HIP.value],
+            left_knee_angle = self.__calculate_angle(landmarks[mp_pose.PoseLandmark.LEFT_HIP.value],
                                                      landmarks[mp_pose.PoseLandmark.LEFT_KNEE.value],
                                                      landmarks[mp_pose.PoseLandmark.LEFT_ANKLE.value])
 
-            right_knee_angle = self.calculate_angle(landmarks[mp_pose.PoseLandmark.RIGHT_HIP.value],
+            right_knee_angle = self.__calculate_angle(landmarks[mp_pose.PoseLandmark.RIGHT_HIP.value],
                                                       landmarks[mp_pose.PoseLandmark.RIGHT_KNEE.value],
                                                       landmarks[mp_pose.PoseLandmark.RIGHT_ANKLE.value])
 
-            right_hip_angle = self.calculate_angle(landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER.value],
+            right_hip_angle = self.__calculate_angle(landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER.value],
                                                      landmarks[mp_pose.PoseLandmark.RIGHT_HIP.value],
                                                      landmarks[mp_pose.PoseLandmark.RIGHT_KNEE.value])
 
-            left_hip_angle = self.calculate_angle(landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value],
+            left_hip_angle = self.__calculate_angle(landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value],
                                                     landmarks[mp_pose.PoseLandmark.LEFT_HIP.value],
                                                     landmarks[mp_pose.PoseLandmark.LEFT_KNEE.value])
 
@@ -69,32 +69,32 @@ class EmotionalStateDeterminator():
                     'right_hip_angle': right_hip_angle,
                     'left_hip_angle': left_hip_angle}
 
-    def get_pose_crossing(self, mp_pose, landmarks):
+    def __get_pose_crossing(self, mp_pose, landmarks):
 
         if landmarks:
-            crossing_forearm = self.is_crossing_vectors(landmarks[mp_pose.PoseLandmark.RIGHT_ELBOW.value],
-                                                         landmarks[mp_pose.PoseLandmark.RIGHT_WRIST.value],
-                                                         landmarks[mp_pose.PoseLandmark.LEFT_ELBOW.value],
-                                                         landmarks[mp_pose.PoseLandmark.LEFT_WRIST.value])
+            crossing_forearm = self.__is_crossing_vectors(landmarks[mp_pose.PoseLandmark.RIGHT_ELBOW.value],
+                                                          landmarks[mp_pose.PoseLandmark.RIGHT_WRIST.value],
+                                                          landmarks[mp_pose.PoseLandmark.LEFT_ELBOW.value],
+                                                          landmarks[mp_pose.PoseLandmark.LEFT_WRIST.value])
 
-            crossing_shin = self.is_crossing_vectors(landmarks[mp_pose.PoseLandmark.RIGHT_KNEE.value],
-                                                      landmarks[mp_pose.PoseLandmark.RIGHT_ANKLE.value],
-                                                      landmarks[mp_pose.PoseLandmark.LEFT_KNEE.value],
-                                                      landmarks[mp_pose.PoseLandmark.LEFT_ANKLE.value])
+            crossing_shin = self.__is_crossing_vectors(landmarks[mp_pose.PoseLandmark.RIGHT_KNEE.value],
+                                                       landmarks[mp_pose.PoseLandmark.RIGHT_ANKLE.value],
+                                                       landmarks[mp_pose.PoseLandmark.LEFT_KNEE.value],
+                                                       landmarks[mp_pose.PoseLandmark.LEFT_ANKLE.value])
 
-            crossing_hip = self.is_crossing_vectors(landmarks[mp_pose.PoseLandmark.RIGHT_HIP.value],
-                                                     landmarks[mp_pose.PoseLandmark.RIGHT_KNEE.value],
-                                                     landmarks[mp_pose.PoseLandmark.LEFT_HIP.value],
-                                                     landmarks[mp_pose.PoseLandmark.LEFT_KNEE.value])
+            crossing_hip = self.__is_crossing_vectors(landmarks[mp_pose.PoseLandmark.RIGHT_HIP.value],
+                                                      landmarks[mp_pose.PoseLandmark.RIGHT_KNEE.value],
+                                                      landmarks[mp_pose.PoseLandmark.LEFT_HIP.value],
+                                                      landmarks[mp_pose.PoseLandmark.LEFT_KNEE.value])
 
-            crossing_ship_hip = self.is_crossing_vectors(landmarks[mp_pose.PoseLandmark.RIGHT_HIP.value],
-                                                          landmarks[mp_pose.PoseLandmark.RIGHT_ANKLE.value],
-                                                          landmarks[mp_pose.PoseLandmark.LEFT_HIP.value],
-                                                          landmarks[mp_pose.PoseLandmark.LEFT_KNEE.value]) or \
-                                        self.is_crossing_vectors(landmarks[mp_pose.PoseLandmark.RIGHT_HIP.value],
-                                                          landmarks[mp_pose.PoseLandmark.RIGHT_KNEE.value],
-                                                          landmarks[mp_pose.PoseLandmark.LEFT_KNEE.value],
-                                                          landmarks[mp_pose.PoseLandmark.LEFT_ANKLE.value])
+            crossing_ship_hip = self.__is_crossing_vectors(landmarks[mp_pose.PoseLandmark.RIGHT_HIP.value],
+                                                           landmarks[mp_pose.PoseLandmark.RIGHT_ANKLE.value],
+                                                           landmarks[mp_pose.PoseLandmark.LEFT_HIP.value],
+                                                           landmarks[mp_pose.PoseLandmark.LEFT_KNEE.value]) or \
+                                        self.__is_crossing_vectors(landmarks[mp_pose.PoseLandmark.RIGHT_HIP.value],
+                                                                   landmarks[mp_pose.PoseLandmark.RIGHT_KNEE.value],
+                                                                   landmarks[mp_pose.PoseLandmark.LEFT_KNEE.value],
+                                                                   landmarks[mp_pose.PoseLandmark.LEFT_ANKLE.value])
 
             return {'crossing_forearm': crossing_forearm,
                     'crossing_shin': crossing_shin,
@@ -110,8 +110,8 @@ class EmotionalStateDeterminator():
         label = 'Unknown Pose'
         color = (0, 0, 255)
 
-        angels = self.get_pose_angle(mp_pose, body_landmarks)
-        crossings = self.get_pose_crossing(mp_pose, body_landmarks)
+        angels = self.__get_pose_angle(mp_pose, body_landmarks)
+        crossings = self.__get_pose_crossing(mp_pose, body_landmarks)
 
         left_elbow_angle = angels['left_elbow_angle']
         right_elbow_angle = angels['right_elbow_angle']

@@ -20,16 +20,13 @@ class App():
         self.gui = TkinterGUI(self)
         self.img = None
 
-        # self.video_player = VideoPlayer(window=self.gui.get_window())
-        # self.webcam_player = WebCamPlayer(canvas=self.gui.canvas, window=self.gui.get_window())
-
-        # self.detector = MediaPipeDetector()
-        # self.determinator = EmotionalStateDeterminator()
+        self.detector = MediaPipeDetector(static_image_mode=True)
+        self.determinator = EmotionalStateDeterminator(detector=self.detector)
 
         self.file_path = None
 
 
-    def get_file_path(self):
+    def __get_file_path(self):
         file_path = askopenfilename()
         file_format = None
         self.img = None
@@ -49,11 +46,14 @@ class App():
         return file_path, file_format
 
     def open_file(self):
-        file_path, file_format = self.get_file_path()
+        file_path, file_format = self.__get_file_path()
         return file_path, file_format
 
     def get_img(self):
         return self.img
+
+    def classify_pose(self, img_array):
+        return self.determinator.classify_pose(img_array)
 
     def start(self):
         self.gui.run()

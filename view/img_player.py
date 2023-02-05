@@ -12,6 +12,8 @@ class ImgPlayer():
         self.img_player_height = img_player_height
         self.img_player_width = img_player_width
 
+        self.img_array = None
+
     def __resize_img(self, img):
         h, w = img.shape[:2]
         if h < w:
@@ -24,13 +26,16 @@ class ImgPlayer():
             img_array = cv2.resize(img, (w, h))
         return img_array
 
-    def load_img(self, img):
-        img_array = None
-        if img is not None:
+    def load_img(self, img=None, img_array=None):
+        self.img_array = img_array
+        if img is not None and img_array is None:
             img = cv2.imdecode(img, cv2.IMREAD_COLOR)
             img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-            img_array = self.__resize_img(img)
-        self.__update_canvas(img_array)
+            self.img_array = self.__resize_img(img)
+        self.__update_canvas(self.img_array)
+
+    def get_img(self):
+        return self.img_array
 
     def __update_canvas(self, img_array):
         if img_array is not None:

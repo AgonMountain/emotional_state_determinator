@@ -26,7 +26,7 @@ class TkinterGUI():
 
         self.bt_select = tk.Button(text="Выбрать", command=self.open_file)
         self.bt_switch_to_web_cam = tk.Button(text="Включить захват с камеры", command=self.switch_to_web_cam)
-        self.bt_activate = tk.Button(text="Выполнить")
+        self.bt_activate = tk.Button(text="Выполнить", command=self.detect)
         self.bt_save = tk.Button(text="Сохранить")
 
         self.canvas = tk.Canvas(self.window, width=PLAYER_WIDTH, height=PLAYER_HEIGHT)
@@ -65,6 +65,7 @@ class TkinterGUI():
         self.update_filepath(file_path)
         if file_format == 'img' or file_format is None:
             self.img_player.load_img(self.app.get_img())
+            self.is_detected = False    # очистка с прошлого детектирования
 
     def switch_to_web_cam(self):
         if self.is_web_cam_input == True:
@@ -80,17 +81,17 @@ class TkinterGUI():
             self.update_filepath("-------- Идет трансляция с веб-камеры --------")
             self.bt_switch_to_web_cam.config(text="Отключить захват с камеры")
 
-    # def detect(self):
-    #     if self.img_array is not None:
-    #         if not self.is_detected:
-    #             # self.detected_img_array = self.detector.detect_hands(self.img_array)
-    #             # self.detected_img_array = self.detector.detect_pose(self.detected_img_array)
-    #             self.detected_img_array = self.determinator.classify_pose(self.img_array)
-    #             self.update_img_window(self.detected_img_array)
-    #             self.is_detected = True
-    #         else:
-    #             self.update_img_window(self.img_array)
-    #             self.is_detected = False
+    def detect(self):
+        if not self.is_detected:
+            img_array = self.img_player.get_img()
+            detected_img_array = self.app.classify_pose(img_array)
+            self.img_player.load_img(img_array=detected_img_array)
+            self.is_detected = True
+        else:
+            self.img_player.load_img(self.app.get_img())
+            self.is_detected = False
+
+
 
     def run(self):
         self.window.mainloop()
