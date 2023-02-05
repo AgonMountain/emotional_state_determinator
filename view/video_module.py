@@ -3,6 +3,7 @@ import tkinter as tk
 from tkinter import filedialog
 from tkVideoPlayer import TkinterVideo
 
+from moviepy.editor import *
 
 class VideoPlayer():
 
@@ -80,3 +81,8 @@ class VideoPlayer():
     def get_frame(self):
         img = self.vid_player.current_img()
         return img
+
+    def __convert_to_30_fps(self, file_path, new_file_path):
+        # TODO надо настроить права на запись новых файлов и тд
+        clip = VideoFileClip(file_path)
+        clip.write_videofile(new_file_path, fps=30, codec="libx264")
