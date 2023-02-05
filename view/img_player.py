@@ -25,11 +25,12 @@ class ImgPlayer():
         return img_array
 
     def load_img(self, img):
+        img_array = None
         if img is not None:
             img = cv2.imdecode(img, cv2.IMREAD_COLOR)
             img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
             img_array = self.__resize_img(img)
-            self.__update_canvas(img_array)
+        self.__update_canvas(img_array)
 
     def __update_canvas(self, img_array):
         if img_array is not None:
