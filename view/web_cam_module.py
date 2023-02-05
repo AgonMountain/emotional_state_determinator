@@ -3,7 +3,7 @@ import cv2
 import PIL.Image, PIL.ImageTk
 import imutils
 
-class CanvasWebCam:
+class WebCamPlayer:
 
     def __init__(self, window, canvas, video_source=0):
         self.window = window
