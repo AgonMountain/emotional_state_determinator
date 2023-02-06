@@ -11,7 +11,7 @@ from tkinter.filedialog import askopenfilename
 from config import PLAYER_HEIGHT, PLAYER_WIDTH
 
 VIDEO_SUFFIX = ['.mp4', '.avi']
-IMG_SUFFIX = ['.png', '.jpg']
+IMG_SUFFIX = ['.png', '.jpg', '.jpeg', '.webp']
 
 
 class App():

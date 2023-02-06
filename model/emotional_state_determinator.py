@@ -103,7 +103,7 @@ class EmotionalStateDeterminator():
 
     def classify_pose(self, img_array):
 
-        img_array, hands_landmarks = self.detector.detect_hands(img_array)
+        # img_array, hands_landmarks = self.detector.detect_hands(img_array)
         img_array, body_landmarks = self.detector.detect_pose(img_array)
         mp_pose = self.detector.get_mp_pose()
 

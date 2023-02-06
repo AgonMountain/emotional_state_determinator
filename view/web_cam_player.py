@@ -1,3 +1,4 @@
+import math
 import tkinter
 import cv2
 import PIL.Image, PIL.ImageTk
@@ -5,12 +6,13 @@ import imutils
 
 class WebCamPlayer:
 
-    def __init__(self, window, canvas, video_source=0):
+    def __init__(self, app, window, canvas, video_source=0):
+        self.app = app
         self.window = window
         self.canvas = canvas
         self.video_source = video_source
         self.vid = None
-
+        self.is_detected = False
         # Button that lets the user take a snapshot
         # self.btn_snapshot=tkinter.Button(window, text="Snapshot", width=50, command=self.snapshot)
         # self.btn_snapshot.pack(anchor=tkinter.CENTER, expand=True)
@@ -26,21 +28,33 @@ class WebCamPlayer:
     #     if ret:
     #         cv2.imwrite("frame-" + time.strftime("%d-%m-%Y-%H-%M-%S") + ".jpg", cv2.cvtColor(frame, cv2.COLOR_RGB2BGR))
 
+    def __resize_img(self, img):
+        return cv2.resize(img, (640, 480))
+
     def start_video_capture(self, start):
         self.is_start_video_capture = start
         if start:
             self.vid = MyVideoCapture(self.video_source)
-            self.update_frame()
+            self.__update_frame()
         else:
             self.vid.__del__()
 
-    def update_frame(self):
+    def set_detected(self, is_detected):
+        self.is_detected = is_detected
+
+    def __update_frame(self):
         if self.is_start_video_capture:
             ret, frame = self.vid.get_frame()
+
+            if self.is_detected:
+                detected_img_array = self.app.classify_pose(self.__resize_img(frame))
+                frame = detected_img_array
+
             if ret:
                 self.photo = PIL.ImageTk.PhotoImage(image=PIL.Image.fromarray(frame))
                 self.canvas.create_image(0, 0, image=self.photo, anchor=tkinter.NW)
-            self.window.after(self.delay, self.update_frame)
+
+            self.window.after(self.delay, self.__update_frame)
 
 
 class MyVideoCapture:
