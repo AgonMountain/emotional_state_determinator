@@ -13,7 +13,7 @@ class OpenPoseDetector():
         self.temporary_output_img_file_name = '\\image_rendered.png'
         self.temporary_output_json_file_name = '\\image_keypoints.json'
 
-    def load_img(self, img_file_path):
+    def __load_img(self, img_file_path):
         img = Image.open(img_file_path)
         im = numpy.array(img)
         result = Image.fromarray(im)
@@ -67,7 +67,8 @@ class OpenPoseDetector():
 
         return out
 
-    def run(self, min_accuracy=0.5):
+    def detect(self, img_file_path, min_accuracy=0.5):
+        self.__load_img(img_file_path)
         subprocess.call([openpose_demo,
                          '--image_dir', openpose_img_input,
                          '--write_json', openpose_json_out,
