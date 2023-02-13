@@ -80,7 +80,7 @@ class MediapipeDetector():
         img = Image.open(img_file_path)
         return numpy.array(img)
 
-    def detect(self, img_file_path, min_accuracy=0.5):
+    def detect(self, img_file_path):
         img = self.__get_img(img_file_path)
         image_height, image_width, _ = img.shape
         results = self.holistic.process(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))

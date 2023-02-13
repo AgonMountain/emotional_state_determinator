@@ -8,10 +8,11 @@ from config import openpose_img_out, openpose_json_out, openpose_img_input, open
 
 class OpenPoseDetector():
     
-    def __init__(self):
+    def __init__(self, min_detection_confidence=0.4):
         self.temporary_file_name = '\\image.png'
         self.temporary_output_img_file_name = '\\image_rendered.png'
         self.temporary_output_json_file_name = '\\image_keypoints.json'
+        self.min_detection_confidence = min_detection_confidence
 
     def __load_img(self, img_file_path):
         img = Image.open(img_file_path)
@@ -67,7 +68,7 @@ class OpenPoseDetector():
 
         return out
 
-    def detect(self, img_file_path, min_accuracy=0.5):
+    def detect(self, img_file_path):
         self.__load_img(img_file_path)
         subprocess.call([openpose_demo,
                          '--image_dir', openpose_img_input,
@@ -79,7 +80,7 @@ class OpenPoseDetector():
                         cwd=openpose_folder)
 
         pose_keypoints_2d, hand_right_keypoints_2d, hand_left_keypoints_2d = self.__get_json()
-        return {'body': self.__convert_body_keypoints(pose_keypoints_2d, min_accuracy),
-                'right_hand': self.__convert_hand_keypoints(hand_right_keypoints_2d, min_accuracy, 'right'),
-                'left_hand': self.__convert_hand_keypoints(hand_right_keypoints_2d, min_accuracy, 'left')}
+        return {'body': self.__convert_body_keypoints(pose_keypoints_2d, self.min_detection_confidence),
+                'right_hand': self.__convert_hand_keypoints(hand_right_keypoints_2d, self.min_detection_confidence, 'right'),
+                'left_hand': self.__convert_hand_keypoints(hand_right_keypoints_2d, self.min_detection_confidence, 'left')}
 
