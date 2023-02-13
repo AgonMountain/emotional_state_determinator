@@ -1,0 +1,68 @@
+{
+  "poses": [
+    {
+      "pose": {
+        "id": 3,
+        "img_name": "5555",
+        "pose_angels": {
+          "right_elbow_angle": [
+            0,
+            0
+          ],
+          "right_shoulder_angle": [
+            0,
+            0
+          ],
+          "right_knee_angle": [
+            0,
+            0
+          ],
+          "right_hip_angle": [
+            0,
+            0
+          ],
+          "left_elbow_angle": [
+            0,
+            0
+          ],
+          "left_shoulder_angle": [
+            0,
+            0
+          ],
+          "left_knee_angle": [
+            0,
+            0
+          ],
+          "left_hip_angle": [
+            0,
+            0
+          ]
+        },
+        "pose_crossings": {
+          "crossing_forearm": 0,
+          "crossing_shin": 0,
+          "crossing_hip": 0,
+          "crossing_ship_hip": 0
+        },
+        "distances_between_keypoints": {
+          "right_wrist_ear": [
+            0,
+            0
+          ],
+          "right_wrist_mouth": [
+            0,
+            0
+          ],
+          "left_wrist_ear": [
+            0,
+            0
+          ],
+          "left_wrist_mouth": [
+            0,
+            0
+          ]
+        }
+      }
+    }
+  ]
+}

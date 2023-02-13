@@ -12,3 +12,4 @@ openpose_img_input = os.path.abspath(r"../openpose/openpose-1.6.0-binaries-win64
 openpose_img_out = os.path.abspath(r"../openpose/openpose-1.6.0-binaries-win64-gpu-flir-3d/openpose/__output/img/")
 openpose_json_out = os.path.abspath(r"../openpose/openpose-1.6.0-binaries-win64-gpu-flir-3d/openpose/__output/json/")
 
+poses_json_file_path = os.path.abspath("../poses.json")
