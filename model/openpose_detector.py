@@ -58,7 +58,8 @@ class OpenPoseDetector():
                            'left_shoulder': 5, 'left_elbow': 6, 'left_wrist': 7,
                            'left_hip': 12, 'left_knee':13, 'left_ankle': 14,
                            'right_shoulder': 2, 'right_elbow': 3, 'right_wrist': 4,
-                           'right_hip': 9, 'right_knee': 10, 'right_ankle': 11}
+                           'right_hip': 9, 'right_knee': 10, 'right_ankle': 11,
+                           'right_ear': 17, 'left_ear': 18}
 
         out = {}
         for key, val in body_key_points.items():
@@ -83,4 +84,3 @@ class OpenPoseDetector():
         return {'body': self.__convert_body_keypoints(pose_keypoints_2d, self.min_detection_confidence),
                 'right_hand': self.__convert_hand_keypoints(hand_right_keypoints_2d, self.min_detection_confidence, 'right'),
                 'left_hand': self.__convert_hand_keypoints(hand_right_keypoints_2d, self.min_detection_confidence, 'left')}
-

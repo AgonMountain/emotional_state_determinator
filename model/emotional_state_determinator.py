@@ -6,10 +6,10 @@ class EmotionalStateDeterminator():
     def __init__(self, detector):
         self.detector = detector
 
-    def __calculate_angle(self, landmark1, landmark2, landmark3):
-        x1, y1, _ = landmark1
-        x2, y2, _ = landmark2
-        x3, y3, _ = landmark3
+    def __calculate_angle(self, point_1, point_2, point_3):
+        x1, y1, _ = point_1
+        x2, y2, _ = point_2
+        x3, y3, _ = point_3
         angle = math.degrees(math.atan2(y3 - y2, x3 - x2) - math.atan2(y1 - y2, x1 - x2))
         if angle < 0:
             # angle += 360

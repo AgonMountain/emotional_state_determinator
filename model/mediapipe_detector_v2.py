@@ -1,11 +1,8 @@
 import cv2
 import mediapipe as mp
-
 import numpy
 from PIL import Image
-import subprocess
-import json
-from openpose_detector import OpenPoseDetector
+
 
 class MediapipeDetector():
 
@@ -57,12 +54,16 @@ class MediapipeDetector():
         mark = self.mp_holistic.PoseLandmark
 
         body_key_points = {'nose': [body_landmark[mark.NOSE].x, body_landmark[mark.NOSE].y],
+                           'left_mouth': [body_landmark[mark.MOUTH_LEFT].x, body_landmark[mark.MOUTH_LEFT].y],
+                           'left_ear': [body_landmark[mark.LEFT_EAR].x, body_landmark[mark.LEFT_EAR].y],
                            'left_shoulder': [body_landmark[mark.LEFT_SHOULDER].x, body_landmark[mark.LEFT_SHOULDER].y],
                            'left_elbow': [body_landmark[mark.LEFT_ELBOW].x, body_landmark[mark.LEFT_ELBOW].y],
                            'left_wrist': [body_landmark[mark.LEFT_WRIST].x, body_landmark[mark.LEFT_WRIST].y],
                            'left_hip': [body_landmark[mark.LEFT_HIP].x, body_landmark[mark.LEFT_HIP].y],
                            'left_knee': [body_landmark[mark.LEFT_KNEE].x, body_landmark[mark.LEFT_KNEE].y],
                            'left_ankle': [body_landmark[mark.LEFT_ANKLE].x, body_landmark[mark.LEFT_ANKLE].y],
+                           'right_mouth': [body_landmark[mark.MOUTH_RIGHT].x, body_landmark[mark.MOUTH_RIGHT].y],
+                           'right_ear': [body_landmark[mark.RIGHT_EAR].x, body_landmark[mark.RIGHT_EAR].y],
                            'right_shoulder': [body_landmark[mark.RIGHT_SHOULDER].x, body_landmark[mark.RIGHT_SHOULDER].y],
                            'right_elbow': [body_landmark[mark.RIGHT_ELBOW].x, body_landmark[mark.RIGHT_ELBOW].y],
                            'right_wrist': [body_landmark[mark.RIGHT_WRIST].x, body_landmark[mark.RIGHT_WRIST].y],
