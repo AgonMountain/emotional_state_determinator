@@ -1,15 +1,12 @@
-import sys
 import numpy
-import PIL
-from PIL import ImageTk, Image
+from PIL import Image
 import subprocess
-import os
 import json
 
 from config import openpose_img_out, openpose_json_out, openpose_img_input, openpose_demo, openpose_folder
 
 
-class OpenposeDetector():
+class OpenPoseDetector():
     
     def __init__(self):
         self.temporary_file_name = '\\image.png'
@@ -85,10 +82,3 @@ class OpenposeDetector():
                 'right_hand': self.__convert_hand_keypoints(hand_right_keypoints_2d, min_accuracy, 'right'),
                 'left_hand': self.__convert_hand_keypoints(hand_right_keypoints_2d, min_accuracy, 'left')}
 
-
-path = "C:\\Users\\agonm\\OneDrive\\Рабочий стол\\Новая папка\\4.jpg"
-op = OpenposeDetector()
-op.load_img(path)
-
-
-print(op.run())
