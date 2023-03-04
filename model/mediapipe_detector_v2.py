@@ -23,10 +23,10 @@ class MediapipeDetector():
         mark = self.mp_holistic.HandLandmark
 
         hands_key_points = {prefix + 'wrist': [hand_landmak[mark.WRIST].x, hand_landmak[mark.WRIST].y],
-                           prefix + 'thumb_cmc': [hand_landmak[mark.THUMB_CMC].x, hand_landmak[mark.THUMB_CMC].y],
-                           prefix + 'thumb_mcp': [hand_landmak[mark.THUMB_MCP].x, hand_landmak[mark.THUMB_MCP].y],
-                           prefix + 'thumb_ip': [hand_landmak[mark.THUMB_IP].x, hand_landmak[mark.THUMB_IP].y],
-                           prefix + 'thumb_tip': [hand_landmak[mark.THUMB_TIP].x, hand_landmak[mark.THUMB_TIP].y],
+                           prefix + 'thumb_finger_cmc': [hand_landmak[mark.THUMB_CMC].x, hand_landmak[mark.THUMB_CMC].y],
+                           prefix + 'thumb_finger_mcp': [hand_landmak[mark.THUMB_MCP].x, hand_landmak[mark.THUMB_MCP].y],
+                           prefix + 'thumb_finger_ip': [hand_landmak[mark.THUMB_IP].x, hand_landmak[mark.THUMB_IP].y],
+                           prefix + 'thumb_finger_tip': [hand_landmak[mark.THUMB_TIP].x, hand_landmak[mark.THUMB_TIP].y],
                            prefix + 'index_finger_mcp': [hand_landmak[mark.INDEX_FINGER_MCP].x, hand_landmak[mark.INDEX_FINGER_MCP].y],
                            prefix + 'index_finger_pip': [hand_landmak[mark.INDEX_FINGER_PIP].x, hand_landmak[mark.INDEX_FINGER_PIP].y],
                            prefix + 'index_finger_dip': [hand_landmak[mark.INDEX_FINGER_DIP].x, hand_landmak[mark.INDEX_FINGER_DIP].y],
@@ -39,10 +39,10 @@ class MediapipeDetector():
                            prefix + 'ring_finger_pip': [hand_landmak[mark.RING_FINGER_PIP].x, hand_landmak[mark.RING_FINGER_PIP].y],
                            prefix + 'ring_finger_dip': [hand_landmak[mark.RING_FINGER_DIP].x, hand_landmak[mark.RING_FINGER_DIP].y],
                            prefix + 'ring_finger_tip': [hand_landmak[mark.RING_FINGER_TIP].x, hand_landmak[mark.RING_FINGER_TIP].y],
-                           prefix + 'pinky_mcp': [hand_landmak[mark.PINKY_MCP].x, hand_landmak[mark.PINKY_MCP].y],
-                           prefix + 'pinky_pip': [hand_landmak[mark.PINKY_PIP].x, hand_landmak[mark.PINKY_PIP].y],
-                           prefix + 'pinky_dip': [hand_landmak[mark.PINKY_DIP].x, hand_landmak[mark.PINKY_DIP].y],
-                           prefix + 'pinky_tip': [hand_landmak[mark.PINKY_TIP].x, hand_landmak[mark.PINKY_TIP].y]}
+                           prefix + 'pinky_finger_mcp': [hand_landmak[mark.PINKY_MCP].x, hand_landmak[mark.PINKY_MCP].y],
+                           prefix + 'pinky_finger_pip': [hand_landmak[mark.PINKY_PIP].x, hand_landmak[mark.PINKY_PIP].y],
+                           prefix + 'pinky_finger_dip': [hand_landmak[mark.PINKY_DIP].x, hand_landmak[mark.PINKY_DIP].y],
+                           prefix + 'pinky_finger_tip': [hand_landmak[mark.PINKY_TIP].x, hand_landmak[mark.PINKY_TIP].y]}
 
         out = {}
         for key, val in hands_key_points.items():
@@ -54,6 +54,8 @@ class MediapipeDetector():
         mark = self.mp_holistic.PoseLandmark
 
         body_key_points = {'nose': [body_landmark[mark.NOSE].x, body_landmark[mark.NOSE].y],
+                           'right_eye': [body_landmark[mark.RIGHT_EYE].x, body_landmark[mark.RIGHT_EYE].y],
+                           'left_eye': [body_landmark[mark.LEFT_EYE].x, body_landmark[mark.LEFT_EYE].y],
                            'left_mouth': [body_landmark[mark.MOUTH_LEFT].x, body_landmark[mark.MOUTH_LEFT].y],
                            'left_ear': [body_landmark[mark.LEFT_EAR].x, body_landmark[mark.LEFT_EAR].y],
                            'left_shoulder': [body_landmark[mark.LEFT_SHOULDER].x, body_landmark[mark.LEFT_SHOULDER].y],
@@ -90,8 +92,8 @@ class MediapipeDetector():
         if results.pose_landmarks:
             out['body'] = self.__convert_body_keypoints(results.pose_landmarks.landmark, image_width, image_height)
         if results.right_hand_landmarks:
-            out['right_hand'] = self.__convert_hand_keypoints(results.right_hand_landmarks.landmark, image_width, image_height, 'right')
+            out['right_hand'] = self.__convert_hand_keypoints(results.right_hand_landmarks.landmark, image_width, image_height, '')
         if results.left_hand_landmarks:
-            out['left_hand'] = self.__convert_hand_keypoints(results.left_hand_landmarks.landmark, image_width, image_height, 'left')
+            out['left_hand'] = self.__convert_hand_keypoints(results.left_hand_landmarks.landmark, image_width, image_height, '')
 
         return out

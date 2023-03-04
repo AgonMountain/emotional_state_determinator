@@ -47,7 +47,7 @@ class WebCamPlayer:
             ret, frame = self.vid.get_frame()
 
             if self.is_detected:
-                detected_img_array = self.app.classify_pose(self.__resize_img(frame))
+                detected_img_array = self.app.determinate_pose(self.__resize_img(frame))
                 frame = detected_img_array
 
             if ret:

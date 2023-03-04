@@ -1,8 +1,6 @@
 import math
 import cv2
 
-from openpose_detector import OpenPoseDetector
-from mediapipe_detector_v2 import MediapipeDetector
 
 class PoseDeterminator():
 
@@ -15,8 +13,8 @@ class PoseDeterminator():
         c_x, c_y = c
         angle = math.degrees(math.atan2(c_y - b_y, c_x - b_x) - math.atan2(a_y - b_y, a_x - b_x))
         if angle < 0:
-            angle += 360
-        return angle
+            angle *= -1
+        return round(angle, 2)
 
     def __ccw(self, a, b, c):
         a_x, a_y = a
@@ -97,65 +95,33 @@ class PoseDeterminator():
         b_x, b_y = b
         return math.hypot(b_x - a_x, b_y - a_y)
 
-    def get_key_points_proximity(self, key_points):
+    def __get_key_points_proximity(self, key_points):
         left_right = ['left_', 'right_']
         out = {}
         for p in left_right:
-            out[p + 'wrist_ear'] = [self.__included_in_circle(key_points[p + 'wrist'], key_points[p + 'ear'], 56),
-                                    self.__get_distance_between(key_points[p + 'wrist'], key_points[p + 'ear'])]
-            out[p + 'wrist_mouth'] = [self.__included_in_circle(key_points[p + 'wrist'], key_points[p + 'mouth'], 72),
-                                    self.__get_distance_between(key_points[p + 'wrist'], key_points[p + 'mouth'])]
+            # out[p + 'wrist_ear'] = [self.__included_in_circle(key_points[p + 'wrist'], key_points[p + 'ear'], 56),
+            #                         round(self.__get_distance_between(key_points[p + 'wrist'], key_points[p + 'ear']) , 2)]
+            # out[p + 'wrist_mouth'] = [self.__included_in_circle(key_points[p + 'wrist'], key_points[p + 'mouth'], 72),
+            #                         round(self.__get_distance_between(key_points[p + 'wrist'], key_points[p + 'mouth']) , 2)]
+            out[p + 'wrist_ear'] = round(self.__get_distance_between(key_points[p + 'wrist'], key_points[p + 'ear']) , 2)
+            out[p + 'wrist_mouth'] = round(self.__get_distance_between(key_points[p + 'wrist'], key_points[p + 'mouth']) , 2)
 
         return out
 
+    def determinate_pose(self, img_file_path):
 
-    def classify_pose(self, img_array):
+        pose = self.detector.detect(img_file_path)
 
-        # img_array, hands_landmarks = self.detector.detect_hands(img_array)
-        img_array, body_landmarks = self.detector.detect_pose(img_array)
-        mp_pose = self.detector.get_mp_pose()
-
-        label = 'Unknown Pose'
-        color = (0, 0, 255)
-
-        angels = self.__get_pose_angle(mp_pose, body_landmarks)
-        crossings = self.__get_pose_crossing(mp_pose, body_landmarks)
-
-        left_elbow_angle = angels['left_elbow_angle']
-        right_elbow_angle = angels['right_elbow_angle']
-        left_shoulder_angle = angels['left_shoulder_angle']
-        right_shoulder_angle = angels['right_shoulder_angle']
-        left_knee_angle = angels['left_knee_angle']
-        right_knee_angle = angels['right_knee_angle']
-
-        crossing_forearm = crossings['crossing_forearm']
-        crossing_shin = crossings['crossing_shin']
-        crossing_hip = crossings['crossing_hip']
-        crossing_ship_hip = crossings['crossing_ship_hip']
-
-        if crossing_forearm and \
-                (left_elbow_angle > 25 and left_elbow_angle < 65) and \
-                (right_elbow_angle > 25 and right_elbow_angle < 65) and \
-                (left_shoulder_angle > 0 and left_shoulder_angle < 25) and \
-                (right_shoulder_angle > 0 and right_shoulder_angle < 25):
-            label = 'Negative'
-
-        if label != 'Unknown Pose':
-            color = (0, 255, 0)
-
-        cv2.putText(img_array, label, (10, 30),cv2.FONT_HERSHEY_PLAIN, 2, color, 2)
-
-        # if display:
-        #     plt.figure(figsize=[10,10])
-        #     plt.imshow(output_image[:,:,::-1]);plt.title("Output Image");plt.axis('off');
-        #
-        # else:
-        #     return self.img, label
-        return img_array
+        angels = self.__get_pose_angles(pose['body'])
+        crossings = self.__get_pose_crossing(pose['body'])
+        proximitys = self.__get_key_points_proximity(pose['body'])
 
 
-m = MediapipeDetector()
-o = OpenPoseDetector()
+        return angels, crossings, proximitys
 
-p = PoseDeterminator(0)
-print(p.get_key_points_proximity(m.detect('C:\\Users\\agonm\\OneDrive\\Рабочий стол\\Новая папка\\Screenshot_1.png')['body']))
+#
+# m = MediapipeDetector()
+# o = OpenPoseDetector()
+#
+# p = PoseDeterminator(m)
+# print(p.determinate_pose('C:\\Users\\agonm\\OneDrive\\Рабочий стол\\Новая папка\\2.jpg'))

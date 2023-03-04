@@ -1,6 +1,6 @@
 import tkinter as tk
 
-from config import *
+from config.config import *
 
 from view.video_player import VideoPlayer
 from view.img_player import ImgPlayer
@@ -115,7 +115,7 @@ class TkinterGUI():
             self.is_detected = False
         elif not self.is_detected:
             img_array = self.img_player.get_img()
-            detected_img_array = self.app.classify_pose(img_array)
+            detected_img_array = self.app.determinate_pose(img_array)
             self.img_player.load_img(img_array=detected_img_array)
             self.is_detected = True
         else:

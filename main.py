@@ -1,14 +1,14 @@
 from view.gui_tkinter import TkinterGUI
 from model.mediapipe_detector import MediaPipeDetector
-from model.emotional_state_determinator import EmotionalStateDeterminator
+from model.emotional_state_classifier import EmotionalStateClassifier
 from controller.load_file import *
-
-
+from model.pose_determinator import PoseDeterminator
+from config.config import poses_json_file_path as pjs
 
 import pathlib
 from tkinter.filedialog import askopenfilename
 
-from config import PLAYER_HEIGHT, PLAYER_WIDTH
+
 
 VIDEO_SUFFIX = ['.mp4', '.avi']
 IMG_SUFFIX = ['.png', '.jpg', '.jpeg', '.webp']
@@ -21,7 +21,8 @@ class App():
         self.img = None
 
         self.detector = MediaPipeDetector(static_image_mode=True)
-        self.determinator = EmotionalStateDeterminator(detector=self.detector)
+        self.determinator = PoseDeterminator(self.detector)
+        self.classifier = EmotionalStateClassifier(self.determinator, pjs)
 
         self.file_path = None
 
@@ -53,7 +54,7 @@ class App():
         return self.img
 
     def classify_pose(self, img_array):
-        return self.determinator.classify_pose(img_array)
+        return self.classifier.classify_pose(img_array)
 
     def start(self):
         self.gui.run()

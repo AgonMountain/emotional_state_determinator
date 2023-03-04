@@ -5,7 +5,7 @@ from tkVideoPlayer import TkinterVideo
 
 from moviepy.editor import *
 
-from config import *
+from config.config import *
 
 class VideoPlayer():
 
