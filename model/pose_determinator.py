@@ -2,7 +2,7 @@ import math
 import cv2
 
 
-class PoseDeterminator():
+class PoseDeterminator:
 
     def __init__(self, detector):
         self.detector = detector
@@ -103,25 +103,17 @@ class PoseDeterminator():
             #                         round(self.__get_distance_between(key_points[p + 'wrist'], key_points[p + 'ear']) , 2)]
             # out[p + 'wrist_mouth'] = [self.__included_in_circle(key_points[p + 'wrist'], key_points[p + 'mouth'], 72),
             #                         round(self.__get_distance_between(key_points[p + 'wrist'], key_points[p + 'mouth']) , 2)]
-            out[p + 'wrist_ear'] = round(self.__get_distance_between(key_points[p + 'wrist'], key_points[p + 'ear']) , 2)
-            out[p + 'wrist_mouth'] = round(self.__get_distance_between(key_points[p + 'wrist'], key_points[p + 'mouth']) , 2)
+            out[p + 'wrist_ear'] = round(self.__get_distance_between(key_points[p + 'wrist'], key_points[p + 'ear']), 2)
+            out[p + 'wrist_mouth'] = round(self.__get_distance_between(key_points[p + 'wrist'], key_points[p + 'mouth']), 2)
 
         return out
 
-    def determinate_pose(self, img_file_path):
+    def determinate_pose(self, image):
 
-        pose = self.detector.detect(img_file_path)
+        pose = self.detector.detect(image)
 
         angels = self.__get_pose_angles(pose['body'])
         crossings = self.__get_pose_crossing(pose['body'])
         proximitys = self.__get_key_points_proximity(pose['body'])
 
-
-        return angels, crossings, proximitys
-
-#
-# m = MediapipeDetector()
-# o = OpenPoseDetector()
-#
-# p = PoseDeterminator(m)
-# print(p.determinate_pose('C:\\Users\\agonm\\OneDrive\\Рабочий стол\\Новая папка\\2.jpg'))
+        return pose, angels, crossings, proximitys

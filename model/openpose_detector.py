@@ -14,15 +14,10 @@ class OpenPoseDetector():
         self.temporary_output_json_file_name = '\\image_keypoints.json'
         self.min_detection_confidence = min_detection_confidence
 
-    def __load_img(self, img_file_path):
-        img = Image.open(img_file_path)
-        im = numpy.array(img)
-        result = Image.fromarray(im)
+    def __load_img_to_local_folder(self, image):
+        img = numpy.array(image)
+        result = Image.fromarray(img)
         result.save(openpose_img_input + self.temporary_file_name)
-
-    def __get_img(self):
-        img = Image.open(openpose_img_out + self.temporary_output_img_file_name)
-        return numpy.array(img)
 
     def __get_json(self):
         with open(openpose_json_out + self.temporary_output_json_file_name) as f:
@@ -70,15 +65,16 @@ class OpenPoseDetector():
 
         return out
 
-    def detect(self, img_file_path):
-        self.__load_img(img_file_path)
+    def detect(self, image):
+        self.__load_img_to_local_folder(image)
         subprocess.call([openpose_demo,
                          '--image_dir', openpose_img_input,
                          '--write_json', openpose_json_out,
                          # '--write_images', openpose_img_out,
                          '--net_resolution', '-1x128',
                          '--number_people_max', '1',
-                         '--hand'],
+                         '--hand'
+                         ],
                         cwd=openpose_folder)
 
         pose_keypoints_2d, hand_right_keypoints_2d, hand_left_keypoints_2d = self.__get_json()

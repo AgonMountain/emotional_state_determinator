@@ -1,4 +1,6 @@
+from PIL import Image, ImageFont, ImageDraw
 from model.pose_manager import PoseManager
+from model.skeleton_graph_drawer import Drawer
 
 
 class EmotionalStateClassifier():
@@ -6,6 +8,7 @@ class EmotionalStateClassifier():
     def __init__(self, determinator, pose_json_file_path):
         self.determinator = determinator
         self.pose_manager = PoseManager(pose_json_file_path)
+        self.drawer = Drawer()
         self.pose_ids = self.pose_manager.ids()
 
     def __compare_crossings(self, hot, cold):
@@ -34,9 +37,9 @@ class EmotionalStateClassifier():
                 return False
         return True
 
-    def classify_pose(self, img_file_path):
+    def classify_pose(self, image):
 
-        hot_angels, hot_crossings, hot_distances = self.determinator.determinate_pose(img_file_path)
+        kps, hot_angels, hot_crossings, hot_distances = self.determinator.determinate_pose(image)
 
         label = 'Unknown'
 
@@ -48,18 +51,21 @@ class EmotionalStateClassifier():
             cold_distances = pose.distances
 
             if self.__compare_crossings(hot_crossings, cold_crossings) and \
-                    self.__compare_angels(hot_angels, cold_angels) and \
-                    self.__compare_distances_between_keypoints(hot_distances, cold_distances):
+                    self.__compare_angels(hot_angels, cold_angels):
+                    #self.__compare_distances_between_keypoints(hot_distances, cold_distances): TODO
                 label = pose.label
 
-        return label
+        if label == "Negative":
+            color = "red"
+        elif label == "Positive":
+            color = "green"
+        else:
+            color = "gray"
 
+        img = self.drawer.get_skeleton(kps, image, color, color, color, color)
 
-# from mediapipe_detector_v2 import MediapipeDetector
-# from pose_determinator import PoseDeterminator
-# from config.config import poses_json_file_path
-#
-# m = MediapipeDetector()
-# d = PoseDeterminator(m)
-# c = EmotionalStateClassifier(d, poses_json_file_path)
-# print(c.classify_pose('C:\\Users\\agonm\\OneDrive\\Рабочий стол\\Новая папка\\1.jpg'))
+        draw = ImageDraw.Draw(img)
+        font = ImageFont.truetype("arial.ttf", 30)
+        draw.text((40, 40), label, color, font=font)
+
+        return label, img

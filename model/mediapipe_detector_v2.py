@@ -16,33 +16,33 @@ class MediapipeDetector():
                                                   enable_segmentation=True,
                                                   min_detection_confidence=min_detection_confidence)
 
-    def __convert_hand_keypoints(self, hand_landmak, image_width, image_height, prefix=''):
+    def __convert_hand_keypoints(self, hand_landmark, image_width, image_height, prefix=''):
         if prefix != '':
             prefix = prefix.lower() + '_'
 
         mark = self.mp_holistic.HandLandmark
 
-        hands_key_points = {prefix + 'wrist': [hand_landmak[mark.WRIST].x, hand_landmak[mark.WRIST].y],
-                           prefix + 'thumb_finger_cmc': [hand_landmak[mark.THUMB_CMC].x, hand_landmak[mark.THUMB_CMC].y],
-                           prefix + 'thumb_finger_mcp': [hand_landmak[mark.THUMB_MCP].x, hand_landmak[mark.THUMB_MCP].y],
-                           prefix + 'thumb_finger_ip': [hand_landmak[mark.THUMB_IP].x, hand_landmak[mark.THUMB_IP].y],
-                           prefix + 'thumb_finger_tip': [hand_landmak[mark.THUMB_TIP].x, hand_landmak[mark.THUMB_TIP].y],
-                           prefix + 'index_finger_mcp': [hand_landmak[mark.INDEX_FINGER_MCP].x, hand_landmak[mark.INDEX_FINGER_MCP].y],
-                           prefix + 'index_finger_pip': [hand_landmak[mark.INDEX_FINGER_PIP].x, hand_landmak[mark.INDEX_FINGER_PIP].y],
-                           prefix + 'index_finger_dip': [hand_landmak[mark.INDEX_FINGER_DIP].x, hand_landmak[mark.INDEX_FINGER_DIP].y],
-                           prefix + 'index_finger_tip': [hand_landmak[mark.INDEX_FINGER_TIP].x, hand_landmak[mark.INDEX_FINGER_TIP].y],
-                           prefix + 'middle_finger_mcp': [hand_landmak[mark.MIDDLE_FINGER_MCP].x, hand_landmak[mark.MIDDLE_FINGER_MCP].y],
-                           prefix + 'middle_finger_pip': [hand_landmak[mark.MIDDLE_FINGER_PIP].x, hand_landmak[mark.MIDDLE_FINGER_PIP].y],
-                           prefix + 'middle_finger_dip': [hand_landmak[mark.MIDDLE_FINGER_DIP].x, hand_landmak[mark.MIDDLE_FINGER_DIP].y],
-                           prefix + 'middle_finger_tip': [hand_landmak[mark.MIDDLE_FINGER_TIP].x, hand_landmak[mark.MIDDLE_FINGER_TIP].y],
-                           prefix + 'ring_finger_mcp': [hand_landmak[mark.RING_FINGER_MCP].x, hand_landmak[mark.RING_FINGER_MCP].y],
-                           prefix + 'ring_finger_pip': [hand_landmak[mark.RING_FINGER_PIP].x, hand_landmak[mark.RING_FINGER_PIP].y],
-                           prefix + 'ring_finger_dip': [hand_landmak[mark.RING_FINGER_DIP].x, hand_landmak[mark.RING_FINGER_DIP].y],
-                           prefix + 'ring_finger_tip': [hand_landmak[mark.RING_FINGER_TIP].x, hand_landmak[mark.RING_FINGER_TIP].y],
-                           prefix + 'pinky_finger_mcp': [hand_landmak[mark.PINKY_MCP].x, hand_landmak[mark.PINKY_MCP].y],
-                           prefix + 'pinky_finger_pip': [hand_landmak[mark.PINKY_PIP].x, hand_landmak[mark.PINKY_PIP].y],
-                           prefix + 'pinky_finger_dip': [hand_landmak[mark.PINKY_DIP].x, hand_landmak[mark.PINKY_DIP].y],
-                           prefix + 'pinky_finger_tip': [hand_landmak[mark.PINKY_TIP].x, hand_landmak[mark.PINKY_TIP].y]}
+        hands_key_points = {prefix + 'wrist': [hand_landmark[mark.WRIST].x, hand_landmark[mark.WRIST].y],
+                           prefix + 'thumb_finger_cmc': [hand_landmark[mark.THUMB_CMC].x, hand_landmark[mark.THUMB_CMC].y],
+                           prefix + 'thumb_finger_mcp': [hand_landmark[mark.THUMB_MCP].x, hand_landmark[mark.THUMB_MCP].y],
+                           prefix + 'thumb_finger_ip': [hand_landmark[mark.THUMB_IP].x, hand_landmark[mark.THUMB_IP].y],
+                           prefix + 'thumb_finger_tip': [hand_landmark[mark.THUMB_TIP].x, hand_landmark[mark.THUMB_TIP].y],
+                           prefix + 'index_finger_mcp': [hand_landmark[mark.INDEX_FINGER_MCP].x, hand_landmark[mark.INDEX_FINGER_MCP].y],
+                           prefix + 'index_finger_pip': [hand_landmark[mark.INDEX_FINGER_PIP].x, hand_landmark[mark.INDEX_FINGER_PIP].y],
+                           prefix + 'index_finger_dip': [hand_landmark[mark.INDEX_FINGER_DIP].x, hand_landmark[mark.INDEX_FINGER_DIP].y],
+                           prefix + 'index_finger_tip': [hand_landmark[mark.INDEX_FINGER_TIP].x, hand_landmark[mark.INDEX_FINGER_TIP].y],
+                           prefix + 'middle_finger_mcp': [hand_landmark[mark.MIDDLE_FINGER_MCP].x, hand_landmark[mark.MIDDLE_FINGER_MCP].y],
+                           prefix + 'middle_finger_pip': [hand_landmark[mark.MIDDLE_FINGER_PIP].x, hand_landmark[mark.MIDDLE_FINGER_PIP].y],
+                           prefix + 'middle_finger_dip': [hand_landmark[mark.MIDDLE_FINGER_DIP].x, hand_landmark[mark.MIDDLE_FINGER_DIP].y],
+                           prefix + 'middle_finger_tip': [hand_landmark[mark.MIDDLE_FINGER_TIP].x, hand_landmark[mark.MIDDLE_FINGER_TIP].y],
+                           prefix + 'ring_finger_mcp': [hand_landmark[mark.RING_FINGER_MCP].x, hand_landmark[mark.RING_FINGER_MCP].y],
+                           prefix + 'ring_finger_pip': [hand_landmark[mark.RING_FINGER_PIP].x, hand_landmark[mark.RING_FINGER_PIP].y],
+                           prefix + 'ring_finger_dip': [hand_landmark[mark.RING_FINGER_DIP].x, hand_landmark[mark.RING_FINGER_DIP].y],
+                           prefix + 'ring_finger_tip': [hand_landmark[mark.RING_FINGER_TIP].x, hand_landmark[mark.RING_FINGER_TIP].y],
+                           prefix + 'pinky_finger_mcp': [hand_landmark[mark.PINKY_MCP].x, hand_landmark[mark.PINKY_MCP].y],
+                           prefix + 'pinky_finger_pip': [hand_landmark[mark.PINKY_PIP].x, hand_landmark[mark.PINKY_PIP].y],
+                           prefix + 'pinky_finger_dip': [hand_landmark[mark.PINKY_DIP].x, hand_landmark[mark.PINKY_DIP].y],
+                           prefix + 'pinky_finger_tip': [hand_landmark[mark.PINKY_TIP].x, hand_landmark[mark.PINKY_TIP].y]}
 
         out = {}
         for key, val in hands_key_points.items():
@@ -79,12 +79,8 @@ class MediapipeDetector():
 
         return out
 
-    def __get_img(self, img_file_path):
-        img = Image.open(img_file_path)
-        return numpy.array(img)
-
-    def detect(self, img_file_path):
-        img = self.__get_img(img_file_path)
+    def detect(self, image):
+        img = numpy.array(image)
         image_height, image_width, _ = img.shape
         results = self.holistic.process(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
 

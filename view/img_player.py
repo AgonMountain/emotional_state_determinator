@@ -1,11 +1,10 @@
-import math
-import cv2
-import PIL
 from PIL import ImageTk, Image
+import PIL
 import tkinter as tk
+import numpy
 
 
-class ImgPlayer():
+class ImgPlayer:
 
     def __init__(self, canvas, img_player_height, img_player_width):
         self.canvas = canvas
@@ -14,24 +13,29 @@ class ImgPlayer():
 
         self.img_array = None
 
-    def __resize_img(self, img):
-        h, w = img.shape[:2]
-        if h < w:
-            h = math.floor(h / (w / self.img_player_width))
-            w = self.img_player_width
-            img_array = cv2.resize(img, (w, h))
-        else:
-            w = math.floor(w / (h / self.img_player_height))
-            h = self.img_player_height
-            img_array = cv2.resize(img, (w, h))
-        return img_array
+    def __resize_img(self, image):
+        base_width = self.img_player_width
+        base_height = self.img_player_height
 
-    def load_img(self, img=None, img_array=None):
-        self.img_array = img_array
-        if img is not None and img_array is None:
-            img = cv2.imdecode(img, cv2.IMREAD_COLOR)
-            img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-            self.img_array = self.__resize_img(img)
+        width_percent = (base_width / float(image.size[0]))
+        height_percent = (base_height / float(image.size[1]))
+
+        height_size = int((float(image.size[1]) * float(width_percent)))
+        width_size = int((float(image.size[0]) * float(height_percent)))
+
+        if width_percent < height_percent:
+            img = image.resize((base_width, height_size), Image.Resampling.LANCZOS)
+        elif width_percent > height_percent:
+            img = image.resize((width_size, base_height), Image.Resampling.LANCZOS)
+        else:
+            img = image
+
+        return numpy.array(img)
+
+    def load_img(self, image):
+        self.img_array = None
+        if image is not None:
+            self.img_array = self.__resize_img(image)
         self.__update_canvas(self.img_array)
 
     def get_img(self):

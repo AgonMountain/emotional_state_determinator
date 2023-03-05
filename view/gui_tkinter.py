@@ -13,10 +13,10 @@ class TkinterGUI():
         self.app = app
 
         self.is_web_cam_input = False
-        self.is_detected = False
+        self.is_classified = False
 
         self.window = tk.Tk()
-        self.window.title("Детектор")
+        self.window.title("Определение эмоционального состояния человека по позе")
         self.window.geometry(str(WINDOW_WIDTH)+"x"+str(WINDOW_HEIGHT))
         self.window.resizable(0,0)
 
@@ -58,7 +58,6 @@ class TkinterGUI():
         self.label_preview.place(x=30, y=0)
         self.canvas.place(x=30, y=25)
 
-
     def switch_to_video_player(self):
         self.frame_img.place_forget()
         self.frame_video.place(x=0, y=95)
@@ -96,31 +95,30 @@ class TkinterGUI():
         if self.is_web_cam_input:   # закрываем поток видео с камеры, перед загрузкой изображений
             self.switch_to_web_cam()
 
-        file_path, file_format = self.app.open_file()
+        file_path, file_format, img = self.app.open_file()
         self.update_filepath(file_path)
         if file_format == 'img' or file_format is None:
             self.switch_to_img_player()
-            self.img_player.load_img(self.app.get_img())
-            self.is_detected = False    # очистка с прошлого детектирования
+            self.img_player.load_img(img)
+            self.is_classified = False    # очистка с прошлого детектирования
         elif file_format == 'video':
             self.switch_to_video_player()
             self.video_player.load_video(file_path)
 
     def detect(self):
-        if self.is_web_cam_input and not self.is_detected:
+        if self.is_web_cam_input and not self.is_classified:
             self.web_cam_player.set_detected(True)
-            self.is_detected = True
-        elif self.is_web_cam_input and self.is_detected:
+            self.is_classified = True
+        elif self.is_web_cam_input and self.is_classified:
             self.web_cam_player.set_detected(False)
-            self.is_detected = False
-        elif not self.is_detected:
-            img_array = self.img_player.get_img()
-            detected_img_array = self.app.determinate_pose(img_array)
-            self.img_player.load_img(img_array=detected_img_array)
-            self.is_detected = True
+            self.is_classified = False
+        elif not self.is_classified:
+            label, img = self.app.classify_pose()
+            self.img_player.load_img(img)
+            self.is_classified = True
         else:
             self.img_player.load_img(self.app.get_img())
-            self.is_detected = False
+            self.is_classified = False
 
     def run(self):
         self.window.mainloop()
