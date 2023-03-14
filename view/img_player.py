@@ -8,8 +8,8 @@ class ImgPlayer:
 
     def __init__(self, canvas, img_player_height, img_player_width):
         self.canvas = canvas
-        self.img_player_height = img_player_height
-        self.img_player_width = img_player_width
+        self.img_player_height = int(img_player_height)
+        self.img_player_width = int(img_player_width)
 
         self.img_array = None
 
@@ -20,8 +20,8 @@ class ImgPlayer:
         width_percent = (base_width / float(image.size[0]))
         height_percent = (base_height / float(image.size[1]))
 
-        height_size = int((float(image.size[1]) * float(width_percent)))
-        width_size = int((float(image.size[0]) * float(height_percent)))
+        height_size = int(float(image.size[1]) * float(width_percent))
+        width_size = int(float(image.size[0]) * float(height_percent))
 
         if width_percent < height_percent:
             img = image.resize((base_width, height_size), Image.Resampling.LANCZOS)
