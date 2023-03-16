@@ -5,7 +5,6 @@ class PoseDrawer:
 
     def __init__(self, body_color="white", left_hand_color="white", right_hand_color="white", hands_color="white"):
         self.img = None
-
         self.body_color = body_color
         self.left_hand_color = left_hand_color
         self.right_hand_color = right_hand_color
@@ -14,13 +13,11 @@ class PoseDrawer:
     def __line(self, coordinates, width=2, internal_fill="black", external_fill="white", joint="curve"):
         draw = ImageDraw.Draw(self.img)
         draw.line(coordinates, width=width+1, fill=external_fill, joint=joint)
-
         draw = ImageDraw.Draw(self.img)
         draw.line(coordinates, width=width, fill=internal_fill, joint=joint)
 
     def __ellipse(self, c, r=2, internal_fill="black", external_fill="white"):
         draw = ImageDraw.Draw(self.img)
-
         for i in range(len(c)):
             if not i%2:
                 draw.ellipse((c[i] - r - 1, c[i + 1] - r - 1,
@@ -87,10 +84,8 @@ class PoseDrawer:
 
         if 'body' in pose:
             self.__draw_body(pose['body'])
-
         if 'left_hand' in pose:
             self.__draw_hands(pose['left_hand'])
-
         if 'right_hand' in pose:
             self.__draw_hands(pose['right_hand'])
 
