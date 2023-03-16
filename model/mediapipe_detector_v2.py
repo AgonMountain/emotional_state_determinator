@@ -4,9 +4,9 @@ import numpy
 from PIL import Image
 
 
-class MediapipeDetector():
+class MediapipeDetector:
 
-    def __init__(self, min_detection_confidence=0.4):
+    def __init__(self, min_detection_confidence=0.5):
         self.mp_drawing = mp.solutions.drawing_utils
         self.mp_drawing_styles = mp.solutions.drawing_styles
         self.mp_holistic = mp.solutions.holistic

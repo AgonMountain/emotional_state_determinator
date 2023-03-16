@@ -1,13 +1,13 @@
 from PIL import Image, ImageFont, ImageDraw
-from model.skeleton_graph_drawer import Drawer
+from model.pose_drawer import PoseDrawer
 
 
-class EmotionalStateClassifier():
+class EmotionalStateClassifier:
 
     def __init__(self, app, pose_determinator):
         self.app = app
         self.pose_determinator = pose_determinator
-        self.drawer = Drawer()
+        self.drawer = PoseDrawer()
 
     def __compare_angel(self, hot_angel, cold_angel, cold_inaccuracy):
         return cold_angel - cold_inaccuracy < hot_angel < cold_angel + cold_inaccuracy

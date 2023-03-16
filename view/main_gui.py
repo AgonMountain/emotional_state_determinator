@@ -131,17 +131,14 @@ class TkinterGUI():
         if self.is_web_cam_input:   # закрываем поток видео с камеры, перед загрузкой изображений
             self.switch_to_web_cam()
 
-        file_path, file_format, img = self.app.open_file()
+        file_path, img = self.app.open_file()
         self.update_filepath(file_path)
-        if file_format == 'img' or file_format is None:
+        if img is not None:
             if self.active_frame == self.frame_img_player:
                 self.img_player.load_img(img)
             if self.active_frame == self.frame_constructor_player:
                 self.constructor_player.load_img(img)
             self.is_classified = False    # очистка с прошлого детектирования
-        elif file_format == 'video':
-            self.switch_to_video_player()
-            self.video_player.load_video(file_path)
 
     def classify(self):
 
@@ -202,4 +199,3 @@ class TkinterGUI():
 
     def run(self):
         self.window.mainloop()
-
