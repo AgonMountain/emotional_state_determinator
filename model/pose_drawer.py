@@ -1,7 +1,7 @@
 from PIL import Image, ImageDraw
 
 
-class Drawer:
+class PoseDrawer:
 
     def __init__(self, body_color="white", left_hand_color="white", right_hand_color="white", hands_color="white"):
         self.img = None
@@ -34,48 +34,48 @@ class Drawer:
             c = c + (element[0], element[1])
         return c
 
-    def __draw_body(self, b):
-        # simple face
-        cartage = self.__to_cortege(b['right_ear'], b['right_eye'], b['nose'], b['left_eye'], b['left_ear'])
-        self.__line(cartage, internal_fill=self.body_color)
-        self.__ellipse(cartage, internal_fill=self.body_color)
-
-        # in openpose doesnt exist
-        if 'left_mouth' in b and 'right_mouth' in b:
-            cartage = self.__to_cortege(b['left_mouth'], b['right_mouth'])
+    def __draw_line(self, d, a, b):
+        if a in d and b in d:
+            cartage = self.__to_cortege(d[a], d[b])
             self.__line(cartage, internal_fill=self.body_color)
             self.__ellipse(cartage, internal_fill=self.body_color)
 
+    def __draw_body(self, b):
+        # simple face
+        self.__draw_line(b, 'right_ear', 'right_eye')
+        self.__draw_line(b, 'right_eye', 'nose')
+        self.__draw_line(b, 'nose', 'left_eye')
+        self.__draw_line(b, 'left_eye', 'left_ear')
+        self.__draw_line(b, 'left_mouth', 'right_mouth')
         # body
-        cartage = self.__to_cortege(b['left_ankle'], b['left_knee'], b['left_hip'], b['left_shoulder'],
-                            b['right_shoulder'], b['right_hip'], b['right_knee'], b['right_ankle'])
-        self.__line(cartage, internal_fill=self.body_color)
-        self.__line(self.__to_cortege(b['left_hip'], b['right_hip']), internal_fill=self.body_color)
-        self.__ellipse(cartage, internal_fill=self.body_color)
-
+        self.__draw_line(b, 'left_ankle', 'left_knee')
+        self.__draw_line(b, 'left_knee', 'left_hip')
+        self.__draw_line(b, 'left_hip', 'left_shoulder')
+        self.__draw_line(b, 'left_shoulder', 'right_shoulder')
+        self.__draw_line(b, 'right_shoulder', 'right_hip')
+        self.__draw_line(b, 'right_hip', 'right_knee')
+        self.__draw_line(b, 'right_knee', 'right_ankle')
+        self.__draw_line(b, 'left_hip', 'right_hip')
         # left hand
-        cartage = self.__to_cortege(b['left_shoulder'], b['left_elbow'], b['left_wrist'])
-        self.__line(cartage, internal_fill=self.left_hand_color)
-        self.__ellipse(cartage, internal_fill=self.left_hand_color)
-
+        self.__draw_line(b, 'left_shoulder', 'left_elbow')
+        self.__draw_line(b, 'left_elbow', 'left_wrist')
         # right hand
-        cartage = self.__to_cortege(b['right_shoulder'], b['right_elbow'], b['right_wrist'])
-        self.__line(cartage, internal_fill=self.right_hand_color)
-        self.__ellipse(cartage, internal_fill=self.right_hand_color)
+        self.__draw_line(b, 'right_shoulder', 'right_elbow')
+        self.__draw_line(b, 'right_elbow', 'right_wrist')
 
     def __draw_hands(self, h):
         fingers = ['index', 'middle', 'ring', 'pinky']
 
-        cartage = self.__to_cortege(h['wrist'], h['thumb_finger_cmc'], h['thumb_finger_mcp'],
-                                      h['thumb_finger_ip'], h['thumb_finger_tip'])
-        self.__line(cartage, internal_fill=self.hands_color)
-        self.__ellipse(cartage, internal_fill=self.hands_color)
+        self.__draw_line(h, 'wrist', 'thumb_finger_cmc')
+        self.__draw_line(h, 'thumb_finger_cmc', 'thumb_finger_mcp')
+        self.__draw_line(h, 'thumb_finger_mcp', 'thumb_finger_ip')
+        self.__draw_line(h, 'thumb_finger_ip', 'thumb_finger_tip')
 
         for f in fingers:
-            cartage = self.__to_cortege(h['wrist'], h[f + '_finger_mcp'], h[f + '_finger_pip'],
-                                          h[f + '_finger_dip'], h[f + '_finger_tip'])
-            self.__line(cartage, internal_fill=self.hands_color)
-            self.__ellipse(cartage, internal_fill=self.hands_color)
+            self.__draw_line(h, 'wrist', f + '_finger_mcp')
+            self.__draw_line(h, f + '_finger_mcp', f + '_finger_pip')
+            self.__draw_line(h, f + '_finger_pip', f + '_finger_dip')
+            self.__draw_line(h, f + '_finger_dip', f + '_finger_tip')
 
     def get_skeleton(self, pose, image, body_color="white", left_hand_color="white", right_hand_color="white", hands_color="white"):
         self.img = image
