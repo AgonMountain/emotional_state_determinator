@@ -6,9 +6,9 @@ import json
 from config.config import openpose_img_out, openpose_json_out, openpose_img_input, openpose_demo, openpose_folder
 
 
-class OpenPoseDetector():
+class OpenPoseDetector:
     
-    def __init__(self, min_detection_confidence=0.4):
+    def __init__(self, min_detection_confidence=0.2):
         self.temporary_file_name = '\\image.png'
         self.temporary_output_img_file_name = '\\image_rendered.png'
         self.temporary_output_json_file_name = '\\image_keypoints.json'
@@ -36,16 +36,14 @@ class OpenPoseDetector():
                            'middle_finger_mcp': 9, 'middle_finger_pip': 10, 'middle_finger_dip': 11, 'middle_finger_tip': 12,
                            'ring_finger_mcp': 13, 'ring_finger_pip': 14, 'ring_finger_dip': 15, 'ring_finger_tip': 16,
                            'pinky_finger_mcp': 17, 'pinky_finger_pip': 18, 'pinky_finger_dip': 19, 'pinky_finger_tip': 20}
-
         if prefix != '':
             prefix = prefix.lower() + '_'
-
         out = {}
         for key, val in body_key_points.items():
             val = val * 3
-            if hand[val + 2] >= min_accuracy:
+            if hand[val + 2] >= min_accuracy and \
+                    (hand[val] and hand[val + 1] and hand[val + 2]):    # x0, y0, a0 -> kp doesnt exist:
                 out[prefix + key] = [hand[val], hand[val + 1]]
-
         return out
 
     def __convert_body_keypoints(self, body, min_accuracy):
@@ -56,13 +54,12 @@ class OpenPoseDetector():
                            'right_hip': 9, 'right_knee': 10, 'right_ankle': 11,
                            'right_ear': 17, 'left_ear': 18,
                            'right_eye': 15, 'left_eye': 16}
-
         out = {}
         for key, val in body_key_points.items():
             val = val * 3
-            if body[val + 2] >= min_accuracy:
+            if body[val + 2] >= min_accuracy and \
+                    (body[val] and body[val + 1] and body[val + 2]):    # x0, y0, a0 -> kp doesnt exist
                 out[key] = [body[val], body[val + 1]]
-
         return out
 
     def detect(self, image):
@@ -80,4 +77,4 @@ class OpenPoseDetector():
         pose_keypoints_2d, hand_right_keypoints_2d, hand_left_keypoints_2d = self.__get_json()
         return {'body': self.__convert_body_keypoints(pose_keypoints_2d, self.min_detection_confidence),
                 'right_hand': self.__convert_hand_keypoints(hand_right_keypoints_2d, self.min_detection_confidence, ''),
-                'left_hand': self.__convert_hand_keypoints(hand_right_keypoints_2d, self.min_detection_confidence, '')}
+                'left_hand': self.__convert_hand_keypoints(hand_left_keypoints_2d, self.min_detection_confidence, '')}
