@@ -87,7 +87,7 @@ class PoseDeterminator:
 
     def __check_number_of_known_key_points(self, pose):
         is_ok = True
-        if len(pose['body']) <= (17 * 0.8):
+        if 'body' not in pose or len(pose['body']) <= (17 * 0.8):
             is_ok = False
         if 'right_hand' not in pose or len(pose['right_hand']) <= (21 * 0.8):
             is_ok = False
