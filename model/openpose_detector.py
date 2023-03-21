@@ -70,7 +70,9 @@ class OpenPoseDetector:
                          # '--write_images', openpose_img_out,
                          '--net_resolution', '-1x128',
                          '--number_people_max', '1',
-                         '--hand'
+                         '--hand',
+                         '--display', '0',
+                         '--render_pose', '0',
                          ],
                         cwd=openpose_folder)
 

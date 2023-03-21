@@ -4,8 +4,9 @@ import cv2
 
 class PoseDeterminator:
 
-    def __init__(self, pose_detector):
-        self.pose_detector = pose_detector
+    def __init__(self, pose_detector_main, pose_detector_additional):
+        self.pose_detector_main = pose_detector_main
+        self.pose_detector_additional = pose_detector_additional
 
     def __ccw(self, a, b, c):
         a_x, a_y = a
@@ -77,8 +78,45 @@ class PoseDeterminator:
                 out[p + 'wrist_mouth'] = round(b, 2)
         return out
 
+    def __check_body_wrist(self, pose):
+        if 'right_hand' in pose and 'wrist' in pose['right_hand']:
+            pose['body']['right_wrist'] = pose['right_hand']['wrist']
+        if 'left_hand' in pose and 'wrist' in pose['left_hand']:
+            pose['body']['left_wrist'] = pose['left_hand']['wrist']
+        return pose
+
+    def __check_number_of_known_key_points(self, pose):
+        is_ok = True
+        if len(pose['body']) <= (17 * 0.8):
+            is_ok = False
+        if 'right_hand' not in pose or len(pose['right_hand']) <= (21 * 0.8):
+            is_ok = False
+        if 'left_hand' not in pose or len(pose['left_hand']) <= (21 * 0.8):
+            is_ok = False
+        return is_ok
+
+    def __merge_dicts(self, main, additional):
+        return {**additional, **main}
+
+    def __merge_key_points(self, main_pose, additional_pose):
+        pose = {}
+        pose['body'] = self.__merge_dicts(additional_pose['body'] if 'body' in additional_pose else {},
+                                          main_pose['body'] if 'body' in main_pose else {},)
+        pose['right_hand'] = self.__merge_dicts(additional_pose['right_hand'] if 'right_hand' in additional_pose else {},
+                                          main_pose['right_hand'] if 'right_hand' in main_pose else {},)
+        pose['left_hand'] = self.__merge_dicts(additional_pose['left_hand'] if 'left_hand' in additional_pose else {},
+                                          main_pose['left_hand'] if 'left_hand' in main_pose else {},)
+        return pose
+
     def determinate_pose(self, image):
-        pose = self.pose_detector.detect(image)
+        pose = self.pose_detector_main.detect(image)
+
+        if not self.__check_number_of_known_key_points(pose):
+            pose_additional = self.pose_detector_additional.detect(image)
+            pose = self.__merge_key_points(pose, pose_additional)
+
+        pose = self.__check_body_wrist(pose)
+
         angels = self.__get_pose_angles(pose['body'])
         crossings = self.__get_pose_crossings(pose['body'])
         kp_distances = self.__get_pose_kp_distances(pose['body'])

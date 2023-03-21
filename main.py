@@ -19,8 +19,9 @@ class App:
         self.__file_path = None
         self.__img = None
 
-        self.__pose_detector = MediapipeDetector()
-        self.__pose_determinator = PoseDeterminator(self.__pose_detector)
+        self.__pose_detector_main = MediapipeDetector()
+        self.__pose_detector_additional = OpenPoseDetector()
+        self.__pose_determinator = PoseDeterminator(self.__pose_detector_main, self.__pose_detector_additional)
         self.__emotional_state_classifier = EmotionalStateClassifier(self, self.__pose_determinator)
         self.__pose_manager = PoseManager(poses_json_file_path)
         self.__gui = TkinterGUI(self)

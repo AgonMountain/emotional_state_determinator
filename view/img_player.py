@@ -27,6 +27,8 @@ class ImgPlayer:
             img = image.resize((base_width, height_size), Image.Resampling.LANCZOS)
         elif width_percent > height_percent:
             img = image.resize((width_size, base_height), Image.Resampling.LANCZOS)
+        elif width_percent == height_percent == 1.0:
+            img = image.resize((width_size, height_size), Image.Resampling.LANCZOS)
         else:
             img = image
 
