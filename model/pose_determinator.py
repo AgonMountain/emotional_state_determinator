@@ -83,11 +83,25 @@ class PoseDeterminator:
             pose['body']['right_wrist'] = pose['right_hand']['wrist']
         if 'left_hand' in pose and 'wrist' in pose['left_hand']:
             pose['body']['left_wrist'] = pose['left_hand']['wrist']
+
+        if 'right_hand' in pose and 'right_wrist' in pose['body']:
+            pose['right_hand']['wrist'] = pose['body']['right_wrist']
+        if 'right_hand' in pose and 'wrist' in pose['body']:
+            pose['left_wrist']['wrist'] = pose['body']['left_wrist']
+
         return pose
+
+    def __is_top_part_body_only(self, pose):
+        down_part_body = ['left_hip', 'left_knee', 'left_ankle',
+                          'right_hip', 'right_knee', 'right_ankle']
+        for p in down_part_body:
+            if p in pose['body']:
+                return False
+        return True
 
     def __check_number_of_known_key_points(self, pose):
         is_ok = True
-        if 'body' not in pose or len(pose['body']) <= (17 * 0.8):
+        if 'body' not in pose or (len(pose['body']) <= (17 * 0.8) and not self.__is_top_part_body_only(pose)):
             is_ok = False
         if 'right_hand' not in pose or len(pose['right_hand']) <= (21 * 0.8):
             is_ok = False
@@ -96,7 +110,7 @@ class PoseDeterminator:
         return is_ok
 
     def __merge_dicts(self, main, additional):
-        return {**additional, **main}
+        return {**main, **additional}
 
     def __merge_key_points(self, main_pose, additional_pose):
         pose = {}

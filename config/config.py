@@ -6,6 +6,13 @@ WINDOW_WIDTH = 1025
 PLAYER_HEIGHT = 640
 PLAYER_WIDTH = 960
 
+STATES = {'Очень отрицательное': 'red',
+          'Отрицательное': 'red',
+          'Очень положительное': 'green',
+          'Положительное': 'green',
+          'Нейтральное': 'gray',
+          'Неизвестное': 'black'}
+
 openpose_folder = os.path.abspath(r"./openpose/openpose-1.6.0-binaries-win64-gpu-flir-3d/openpose/")
 openpose_demo = os.path.abspath(r"./openpose/openpose-1.6.0-binaries-win64-gpu-flir-3d/openpose/bin/OpenPoseDemo.exe")
 openpose_img_input = os.path.abspath(r"./openpose/openpose-1.6.0-binaries-win64-gpu-flir-3d/openpose/__input/")

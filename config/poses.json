@@ -66,6 +66,74 @@
         "pose_description": "",
         "recent_change_date_time": "Создано: 14-03-2023 19:08:43"
       }
+    },
+
+    {
+      "pose": {
+        "id": 2,
+        "state": "Negative",
+        "img_name": "2.png",
+        "pose_angels": {
+          "left_elbow_angle": [
+            49.5,
+            15
+          ],
+          "left_shoulder_angle": [
+            18.88,
+            15
+          ],
+          "left_knee_angle": [
+            184.27,
+            15
+          ],
+          "left_hip_angle": [
+            166.79,
+            15
+          ],
+          "right_elbow_angle": [
+            47.75,
+            15
+          ],
+          "right_shoulder_angle": [
+            23.08,
+            15
+          ],
+          "right_knee_angle": [
+            180.15,
+            15
+          ],
+          "right_hip_angle": [
+            190.21,
+            15
+          ]
+        },
+        "kp_distances": {
+          "left_wrist_ear": [
+            177.49,
+            0
+          ],
+          "left_wrist_mouth": [
+            123.52,
+            0
+          ],
+          "right_wrist_ear": [
+            188.67,
+            0
+          ],
+          "right_wrist_mouth": [
+            134.52,
+            0
+          ]
+        },
+        "pose_crossings": {
+          "crossing_forearm": true,
+          "crossing_shin": false,
+          "crossing_hip": false,
+          "crossing_ship_hip": false
+        },
+        "pose_description": "",
+        "recent_change_date_time": "Создано: 14-03-2023 19:08:43"
+      }
     }
   ]
 }

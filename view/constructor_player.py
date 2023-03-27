@@ -1,15 +1,9 @@
-import math
-import cv2
-import PIL
-from PIL import ImageTk, Image
 import re
 import tkinter as tk
 from tkinter import ttk
-
-import config.config
 from config.config import *
 from view.img_player import ImgPlayer
-
+from view.pose_table_player import PoseTablePlayer
 
 class ConstructorPlayer:
 
@@ -20,65 +14,64 @@ class ConstructorPlayer:
         self.constructor_player_height = constructor_player_height
         self.constructor_player_width = constructor_player_width
 
+        self.frame_pose_table_player = tk.Frame(window, height=self.constructor_player_height,
+                                                width=self.constructor_player_width)
+        self.pose_table_player = PoseTablePlayer(self, self.frame_pose_table_player,
+                                                 constructor_player_height, constructor_player_width)
+
+        self.active_frame = self.frame_pose_table_player
+
         size = 0.8
         self.img_player_height = constructor_player_height * size
         self.img_player_width = constructor_player_width * size
 
-        # self.load_img_btn
-        # self.switch_to_web_cam_btn
-        # self.stop_shot
+        self.frame_editor = tk.Frame(window, height=self.constructor_player_height,
+                                       width=self.constructor_player_width)
 
-        self.frame_controls = tk.Frame(window, height=self.constructor_player_height, width=self.constructor_player_width)
+        self.frame_controls = tk.Frame(self.frame_editor, height=self.constructor_player_height, width=self.constructor_player_width)
         self.img_canvas = tk.Canvas(self.frame_controls, width=self.img_player_width, height=self.img_player_height)
         self.img_canvas.create_rectangle(0, 0, PLAYER_WIDTH, PLAYER_HEIGHT, fill='black')
-        self.img_player = ImgPlayer(self.img_canvas, self.img_player_height, self.img_player_width)
+        self.img_player = ImgPlayer(self.app, self.img_canvas, self.img_player_height, self.img_player_width)
         self.bt_save = tk.Button(self.frame_controls, text="Сохранить", command=self.save)
-        self.bt_update = tk.Button(self.frame_controls, text="Обновить", command=self.update)
-        self.bt_delete = tk.Button(self.frame_controls, text="Удалить", command=self.delete)
+        self.bt_cancel = tk.Button(self.frame_controls, text="Отмена", command=self.__cancel_edit_pose)
 
         # ==========
-        self.frame_emotional_state = tk.Frame(window, height=60, width=175)
+        self.frame_emotional_state = tk.Frame(self.frame_editor, height=60, width=175)
         self.label_emotional_state = tk.Label(self.frame_emotional_state, text="Оценка состояния:")
         self.field_emotional_state = ttk.Combobox(self.frame_emotional_state, values=self.emotional_states, width=18, state="readonly")
         self.field_emotional_state.set(self.emotional_states[0])
 
         # ==========
-        self.frame_body_inaccuracy = tk.Frame(window, height=100, width=175)
+        self.frame_body_inaccuracy = tk.Frame(self.frame_editor, height=100, width=175)
         self.label_body_inaccuracy = tk.Label(self.frame_body_inaccuracy, text="Погрешность углов тела:")
         self.field_body_inaccuracy = tk.Entry(self.frame_body_inaccuracy, justify="right", width=15)
         self.label_body_inaccuracy_px = tk.Label(self.frame_body_inaccuracy, text="гр.")
         self.bt_show_body_inaccuracy = tk.Button(self.frame_body_inaccuracy, text="Показать погрешность", command=self.show_body_inaccuracy)
 
         # ==========
-        self.frame_right_hand_inaccuracy = tk.Frame(window, height=130, width=175)
+        self.frame_right_hand_inaccuracy = tk.Frame(self.frame_editor, height=130, width=175)
         self.label_right_hand_inaccuracy = tk.Label(self.frame_right_hand_inaccuracy, text="Погрешность точек\nправой руки:")
         self.field_right_hand_inaccuracy = tk.Entry(self.frame_right_hand_inaccuracy, justify="right", width=15)
         self.label_right_hand_inaccuracy_px = tk.Label(self.frame_right_hand_inaccuracy, text="px")
         self.bt_right_hand_inaccuracy = tk.Button(self.frame_right_hand_inaccuracy, text="Показать погрешность", command=self.show_body_inaccuracy)
 
-        self.frame_left_hand_inaccuracy = tk.Frame(window, height=130, width=175)
+        self.frame_left_hand_inaccuracy = tk.Frame(self.frame_editor, height=130, width=175)
         self.label_left_hand_inaccuracy = tk.Label(self.frame_left_hand_inaccuracy, text="Погрешность точек\nлевой руки:")
         self.field_left_hand_inaccuracy = tk.Entry(self.frame_left_hand_inaccuracy, justify="right", width=15)
         self.label_left_hand_inaccuracy_px = tk.Label(self.frame_left_hand_inaccuracy, text="px")
         self.bt_left_hand_inaccuracy = tk.Button(self.frame_left_hand_inaccuracy, text="Показать погрешность",
                                                   command=self.show_body_inaccuracy)
 
-        # ==========
-        self.frame_poses = tk.Frame(window, height=80, width=175)
-        self.label_poses = tk.Label(self.frame_poses, text="Выбрать\nсуществующую позу:")
-        self.field_poses = ttk.Combobox(self.frame_poses, values=poses, width=18, state="readonly")
-        self.field_poses.bind('<<ComboboxSelected>>', self.pose_changed)
-        # self.field_poses.set(poses[0])
-
         self.pack_and_place()
 
     def pack_and_place(self):
+        self.active_frame.place(x=0, y=0)
+
         self.frame_controls.place(x=0, y=0)
         self.frame_emotional_state.place(x=self.img_player_width + 10, y=10)
         self.frame_body_inaccuracy.place(x=self.img_player_width + 10, y=80)
         self.frame_right_hand_inaccuracy.place(x=self.img_player_width + 10, y=190)
         self.frame_left_hand_inaccuracy.place(x=self.img_player_width + 10, y=320)
-        self.frame_poses.place(x=self.img_player_width + 10, y=490)
 
         self.img_canvas.place(x=0, y=0)
 
@@ -100,12 +93,33 @@ class ConstructorPlayer:
         self.label_left_hand_inaccuracy_px.place(x=130, y=50)
         self.bt_left_hand_inaccuracy.place(x=0, y=80)
 
-        self.label_poses.place(x=0, y=0)
-        self.field_poses.place(x=0, y=50)
+        # self.label_poses.place(x=0, y=0)
+        # self.field_poses.place(x=0, y=50)
 
         self.bt_save.place(x=150, y=self.img_player_height + 10)
-        self.bt_update.place(x=300, y=self.img_player_height + 10)
-        self.bt_delete.place(x=450, y=self.img_player_height + 10)
+        self.bt_cancel.place(x=250, y=self.img_player_height + 10)
+        # self.bt_update.place(x=300, y=self.img_player_height + 10)
+        # self.bt_delete.place(x=450, y=self.img_player_height + 10)
+
+    def __switch_to_table(self):
+        self.active_frame.place_forget()
+        self.active_frame = self.frame_pose_table_player
+        self.active_frame.place(x=0, y=0)
+
+    def __switch_to_editor(self):
+        self.active_frame.place_forget()
+        self.active_frame = self.frame_editor
+        self.active_frame.place(x=0, y=0)
+
+    def get_poses(self):
+        return self.app.get_poses()
+
+    def update_pose(self, pose_id):
+        self.__switch_to_editor()
+        self.pose_changed(pose_id)
+
+    def __cancel_edit_pose(self):
+        self.__switch_to_table()
 
     def save(self):
         img, label, data = self.app.classify_pose(self.app.get_img())
@@ -148,15 +162,7 @@ class ConstructorPlayer:
     def show_body_inaccuracy(self):
         return 0
 
-    def pose_changed(self, e):
-        name = self.field_poses.get()
-
-        id = re.findall(r'\d+', name)
-        if len(id) > 0:
-            id = int(id[0])
-        else:
-            id = -1
-
+    def pose_changed(self, id):
         pose_image, pose_data = self.app.get_pose(id)
 
         self.img_player.load_img(pose_image)

@@ -6,12 +6,28 @@ import numpy
 
 class ImgPlayer:
 
-    def __init__(self, canvas, img_player_height, img_player_width):
-        self.canvas = canvas
+    def __init__(self, app, window, img_player_height, img_player_width):
+
         self.img_player_height = int(img_player_height)
         self.img_player_width = int(img_player_width)
-
         self.img_array = None
+
+        self.app = app
+
+        self.frame_img_player = tk.Frame(window, height=img_player_height, width=img_player_width)
+        self.label_preview = tk.Label(self.frame_img_player, text="Предпросмотр")
+        self.canvas_img_player = tk.Canvas(self.frame_img_player, width=img_player_width, height=img_player_height)
+        self.canvas_img_player.create_rectangle(0, 0, img_player_width, img_player_height, fill='black')
+        self.canvas_img_player.create_text((self.img_player_width / 2, self.img_player_height / 2),
+                                           text="Изображение отсутствует, загрузите его с помощью кнопки \"Выбрать\"",
+                                           fill="#ffffff", font=1000)
+
+        self.__pack_and_place()
+
+    def __pack_and_place(self):
+        self.frame_img_player.place(x=0, y=0)
+        self.label_preview.place(x=0, y=0)
+        self.canvas_img_player.place(x=0, y=25)
 
     def __resize_img(self, image):
         base_width = self.img_player_width
@@ -46,9 +62,13 @@ class ImgPlayer:
     def __update_canvas(self, img_array):
         if img_array is not None:
             self.pil_img = PIL.ImageTk.PhotoImage(PIL.Image.fromarray(img_array))
-            self.canvas.create_image(self.img_player_width / 2, self.img_player_height / 2, anchor=tk.CENTER, image=self.pil_img)
+            self.canvas_img_player.create_rectangle(0, 0, self.img_player_width, self.img_player_height, fill='black')
+            self.canvas_img_player.create_image(self.img_player_width / 2, self.img_player_height / 2, anchor=tk.CENTER, image=self.pil_img)
         else:
             self.__clear_canvas_frame()
 
     def __clear_canvas_frame(self):
-        self.canvas.create_rectangle(0, 0, self.img_player_width, self.img_player_height, fill='black')
+        self.canvas_img_player.create_rectangle(0, 0, self.img_player_width, self.img_player_height, fill='black')
+        self.canvas_img_player.create_text((self.img_player_width / 2, self.img_player_height / 2),
+                                           text="Изображение отсутствует, загрузите его с помощью кнопки \"Выбрать\"",
+                                           fill="#ffffff", font=1000)
