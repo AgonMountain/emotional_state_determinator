@@ -8,6 +8,8 @@ class PoseDeterminator:
         self.pose_detector_main = pose_detector_main
         self.pose_detector_additional = pose_detector_additional
 
+        self.high_quality_mode = False
+
     def __ccw(self, a, b, c):
         a_x, a_y = a
         b_x, b_y = b
@@ -122,10 +124,14 @@ class PoseDeterminator:
                                           main_pose['left_hand'] if 'left_hand' in main_pose else {},)
         return pose
 
+    def set_high_quality_mode(self, b):
+        self.high_quality_mode = b
+
+
     def determinate_pose(self, image):
         pose = self.pose_detector_main.detect(image)
 
-        if not self.__check_number_of_known_key_points(pose):
+        if not self.__check_number_of_known_key_points(pose) and self.high_quality_mode:
             pose_additional = self.pose_detector_additional.detect(image)
             pose = self.__merge_key_points(pose, pose_additional)
 

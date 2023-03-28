@@ -12,21 +12,24 @@ class ControlPlayer:
         self.__is_web_cam_input = False
         self.__is_constructor_input = False
         self.__is_classified = False
+        self.__is_high_quality_mode = False
 
         # filepath frame
         self.__frame_file = tk.Frame(window, height=player_height, width=player_width)
         self.__label_path_to_file = tk.Label(self.__frame_file, text="Путь к файлу")
         self.__entry_path_to_file = tk.Entry(self.__frame_file, justify="left", width=70, state="readonly")
         self.__bt_select_file = tk.Button(self.__frame_file, text="Выбрать", command=self.__open_file)
+        self.__bt_switch_to_web_cam = tk.Button(self.__frame_file, text="Включить захват с камеры",
+                                                command=self.__switch_to_web_cam)
 
         # main control panel frame
         self.__frame_controls = tk.Frame(window, height=player_height, width=player_width)
-        self.__bt_switch_to_web_cam = tk.Button(self.__frame_controls, text="Включить захват с камеры",
-                                                command=self.__switch_to_web_cam)
         self.__bt_classify = tk.Button(self.__frame_controls, text="Выполнить", command=self.__classify, state='disabled')
         self.__bt_save = tk.Button(self.__frame_controls, text="Сохранить", command=self.__save_file, state='disabled')
         self.__bt_switch_to_constructor = tk.Button(self.__frame_controls, text="Переключиться на конструктор",
                                                     command=self.__switch_to_constructor)
+        self.__bt_high_quality_mode = tk.Button(self.__frame_controls, text="Включить режим высокого качества",
+                                                    command=self.set_high_quality_mode)
         self.__pack_and_place()
 
     def __pack_and_place(self):
@@ -34,11 +37,12 @@ class ControlPlayer:
         self.__label_path_to_file.place(x=0, y=0)
         self.__entry_path_to_file.place(x=0, y=25)
         self.__bt_select_file.place(x=570, y=25)
-        self.__frame_controls.place(x=0, y=60)
-        self.__bt_switch_to_web_cam.place(x=0, y=0)
-        self.__bt_switch_to_constructor.place(x=250, y=0)
-        self.__bt_classify.place(x=740, y=0)
-        self.__bt_save.place(x=850, y=0)
+        self.__bt_switch_to_web_cam.place(x=700, y=25)
+        self.__frame_controls.place(x=0, y=65)
+        self.__bt_switch_to_constructor.place(x=0, y=0)
+        self.__bt_high_quality_mode.place(x=350, y=0)
+        self.__bt_classify.place(x=650, y=0)
+        self.__bt_save.place(x=800, y=0)
 
     def activate_deactivate_buttons(self):
         self.__bt_classify['state'] = 'normal' if self.__file_path != "" or self.__is_web_cam_input else 'disabled'
@@ -54,6 +58,12 @@ class ControlPlayer:
         self.__file_path = self.__app.open_file()
         self.__update_file_path_field(self.__file_path)
         self.__cancel_classify()
+
+    def set_high_quality_mode(self):
+        self.__is_high_quality_mode = not self.__is_high_quality_mode
+        self.__bt_high_quality_mode.config(text="Отключить режим высокого качества" if self.__is_high_quality_mode
+                                            else "Включить режим высокого качества")
+        self.__app.set_high_quality_mode(self.__is_high_quality_mode)
 
     def __save_file(self):
         self.__app.save_file()

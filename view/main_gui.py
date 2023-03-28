@@ -44,7 +44,10 @@ class MainGUI:
 
     def pack_and_place(self):
         self.frame_control_player.place(x=30, y=0)
-        self.frame_img_player.place(x=30, y=95)
+        self.frame_img_player.place(x=30, y=100)
+
+    def set_high_quality_mode(self, b):
+        self.app.set_high_quality_mode(b)
 
     def switch_player(self):
         if self.active_frame == self.frame_web_cam_player: # stop webcam capture before switch to other player
@@ -60,19 +63,19 @@ class MainGUI:
     def switch_to_img_player(self):
         self.active_frame.place_forget()
         self.active_frame = self.frame_img_player
-        self.active_frame.place(x=30, y=95)
+        self.active_frame.place(x=30, y=100)
         self.img_player.load_img(self.app.get_img())
 
     def switch_to_constructor_player(self):
         self.active_frame.place_forget()
         self.active_frame = self.frame_constructor_player
-        self.active_frame.place(x=30, y=95)
+        self.active_frame.place(x=30, y=100)
         self.constructor_player.load_img(self.app.get_img())
 
     def switch_to_web_cam_player(self):
         self.active_frame.place_forget()
         self.active_frame = self.frame_web_cam_player
-        self.active_frame.place(x=30, y=95)
+        self.active_frame.place(x=30, y=100)
         self.web_cam_player.start_video_capture(True)
 
     def save_file(self):

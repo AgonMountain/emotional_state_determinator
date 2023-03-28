@@ -46,6 +46,9 @@ class App:
         if file:
             Image.fromarray(image).save(file.name)
 
+    def set_high_quality_mode(self, b):
+        self.__pose_determinator.set_high_quality_mode(b)
+
     def classify_pose(self, image):
         return self.__emotional_state_classifier.classify_pose(image.copy())
 
