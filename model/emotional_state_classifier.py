@@ -1,3 +1,4 @@
+import PIL
 from PIL import Image, ImageFont, ImageDraw
 from model.pose_drawer import PoseDrawer
 
@@ -15,9 +16,9 @@ class EmotionalStateClassifier:
     def __compare_distance_between_keypoints(self, hot_distances, cold_distances, cold_distances_inaccuracy):
         return cold_distances - cold_distances_inaccuracy < hot_distances < cold_distances + cold_distances_inaccuracy
 
-    def __compare_angels(self, hot_angels, cold_angels):
+    def __compare_angels(self, hot_angels, cold_angels, cold_angels_inaccuracies):
         for angel_name in cold_angels:
-            if not (self.__compare_angel(hot_angels[angel_name], cold_angels[angel_name][0], cold_angels[angel_name][1])):
+            if not (self.__compare_angel(hot_angels[angel_name], cold_angels[angel_name], cold_angels_inaccuracies)):
                 return False
         return True
 
@@ -34,20 +35,21 @@ class EmotionalStateClassifier:
     def classify_pose(self, image):
         hot_pose, hot_angels, hot_crossings, hot_distances = self.pose_determinator.determinate_pose(image)
 
-        state = 'Unknown'
+        state = 'Неизвестное'
 
         for pose in self.app.get_poses():
-            cold_angels = pose.pose_angels
-            cold_crossings = pose.pose_crossings
-            cold_distances = pose.kp_distances
+            cold_angels = pose.get_pose_angels()
+            cold_crossings = pose.get_pose_crossings()
+            cold_distances = pose.get_kp_distances()
+            cold_angels_inaccuracies = pose.get_pose_angels_inaccuracy()
+            cold_distances_inaccuracies = pose.get_pose_angels_inaccuracy()
 
             if self.__compare_crossings(hot_crossings, cold_crossings) and \
-                    self.__compare_angels(hot_angels, cold_angels):
+                    self.__compare_angels(hot_angels, cold_angels, cold_angels_inaccuracies):
                     #self.__compare_distances_between_keypoints(hot_distances, cold_distances): TODO
-                state = pose.state
+                state = pose.get_state()
 
-        state_color = {'Negative': 'red', 'Positive': 'green', 'Neutral': 'gray', 'Unknown': 'black'}
-        color = state_color[state]
+        color = self.app.get_states()[state]
         img = self.drawer.get_skeleton(hot_pose, image, color, color, color, color)
 
         font = ImageFont.truetype("segoeui.ttf", 40)

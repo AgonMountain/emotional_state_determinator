@@ -10,12 +10,12 @@ class ImgPlayer:
 
         self.img_player_height = int(img_player_height)
         self.img_player_width = int(img_player_width)
-        self.img_array = None
+        self.image_nparray = None
 
         self.app = app
 
         self.frame_img_player = tk.Frame(window, height=img_player_height, width=img_player_width)
-        self.label_preview = tk.Label(self.frame_img_player, text="Предпросмотр")
+        self.label_preview = tk.Label(self.frame_img_player, text="Предпросмотр:")
         self.canvas_img_player = tk.Canvas(self.frame_img_player, width=img_player_width, height=img_player_height)
         self.canvas_img_player.create_rectangle(0, 0, img_player_width, img_player_height, fill='black')
         self.canvas_img_player.create_text((self.img_player_width / 2, self.img_player_height / 2),
@@ -51,13 +51,13 @@ class ImgPlayer:
         return numpy.array(img)
 
     def load_img(self, image):
-        self.img_array = None
+        self.image_nparray = None
         if image is not None:
-            self.img_array = self.__resize_img(image)
-        self.__update_canvas(self.img_array)
+            self.image_nparray = self.__resize_img(image)
+        self.__update_canvas(self.image_nparray)
 
     def get_img(self):
-        return self.img_array
+        return PIL.Image.fromarray(self.image_nparray)
 
     def __update_canvas(self, img_array):
         if img_array is not None:

@@ -1,3 +1,4 @@
+import PIL.Image
 from PIL import Image, ImageDraw
 
 
@@ -74,7 +75,8 @@ class PoseDrawer:
             self.__draw_line(h, f + '_finger_pip', f + '_finger_dip')
             self.__draw_line(h, f + '_finger_dip', f + '_finger_tip')
 
-    def get_skeleton(self, pose, image, body_color="white", left_hand_color="white", right_hand_color="white", hands_color="white"):
+    def get_skeleton(self, pose, image, body_color="white", left_hand_color="white", right_hand_color="white",
+                     hands_color="white"):
         self.img = image
 
         self.body_color = body_color

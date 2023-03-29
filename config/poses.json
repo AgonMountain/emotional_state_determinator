@@ -2,128 +2,62 @@
   "poses": [
     {
       "pose": {
-        "id": 1,
-        "state": "Negative",
-        "img_name": "1.png",
+        "id": 3,
+        "state": "Очень положительное",
+        "img_name": "3.png",
         "pose_angels": {
-          "left_elbow_angle": [
-            49.5,
-            15
-          ],
-          "left_shoulder_angle": [
-            18.88,
-            15
-          ],
-          "left_knee_angle": [
-            184.27,
-            15
-          ],
-          "left_hip_angle": [
-            166.79,
-            15
-          ],
-          "right_elbow_angle": [
-            47.75,
-            15
-          ],
-          "right_shoulder_angle": [
-            23.08,
-            15
-          ],
-          "right_knee_angle": [
-            180.15,
-            15
-          ],
-          "right_hip_angle": [
-            190.21,
-            15
-          ]
+          "left_elbow_angle": 58.29,
+          "left_shoulder_angle": 29.55,
+          "left_knee_angle": 184.52,
+          "left_hip_angle": 175.9,
+          "right_elbow_angle": 94.82,
+          "right_shoulder_angle": 0.63,
+          "right_knee_angle": 177.9,
+          "right_hip_angle": 192.88
         },
         "kp_distances": {
-          "left_wrist_ear": [
-            177.49,
-            0
-          ],
-          "left_wrist_mouth": [
-            123.52,
-            0
-          ],
-          "right_wrist_ear": [
-            188.67,
-            0
-          ],
-          "right_wrist_mouth": [
-            134.52,
-            0
-          ]
+          "left_wrist_ear": 262.26,
+          "left_wrist_mouth": 231.17,
+          "right_wrist_ear": 315.85,
+          "right_wrist_mouth": 277.28
         },
         "pose_crossings": {
-          "crossing_forearm": true,
+          "crossing_forearm": false,
           "crossing_shin": false,
           "crossing_hip": false,
           "crossing_ship_hip": false
         },
-        "pose_description": "",
-        "recent_change_date_time": "Создано: 14-03-2023 19:08:43"
+        "inaccuracies": {
+          "pose_angels_inaccuracy": 15,
+          "kp_distances_inaccuracy": {
+            "right": 10,
+            "left": 5
+          }
+        },
+        "pose_description": "slova\n",
+        "recent_change_date_time": "Создано: 29-03-2023 21:07:28"
       }
     },
-
     {
       "pose": {
-        "id": 2,
-        "state": "Negative",
-        "img_name": "2.png",
+        "id": 1,
+        "state": "Отрицательное",
+        "img_name": "1.png",
         "pose_angels": {
-          "left_elbow_angle": [
-            49.5,
-            15
-          ],
-          "left_shoulder_angle": [
-            18.88,
-            15
-          ],
-          "left_knee_angle": [
-            184.27,
-            15
-          ],
-          "left_hip_angle": [
-            166.79,
-            15
-          ],
-          "right_elbow_angle": [
-            47.75,
-            15
-          ],
-          "right_shoulder_angle": [
-            23.08,
-            15
-          ],
-          "right_knee_angle": [
-            180.15,
-            15
-          ],
-          "right_hip_angle": [
-            190.21,
-            15
-          ]
+          "left_elbow_angle": 49.1,
+          "left_shoulder_angle": 18.66,
+          "left_knee_angle": 184.07,
+          "left_hip_angle": 166.66,
+          "right_elbow_angle": 50.47,
+          "right_shoulder_angle": 22.99,
+          "right_knee_angle": 180.02,
+          "right_hip_angle": 190.02
         },
         "kp_distances": {
-          "left_wrist_ear": [
-            177.49,
-            0
-          ],
-          "left_wrist_mouth": [
-            123.52,
-            0
-          ],
-          "right_wrist_ear": [
-            188.67,
-            0
-          ],
-          "right_wrist_mouth": [
-            134.52,
-            0
-          ]
+          "left_wrist_ear": 166.78,
+          "left_wrist_mouth": 113.76,
+          "right_wrist_ear": 189.44,
+          "right_wrist_mouth": 138.87
         },
         "pose_crossings": {
           "crossing_forearm": true,
@@ -131,8 +65,15 @@
           "crossing_hip": false,
           "crossing_ship_hip": false
         },
-        "pose_description": "",
-        "recent_change_date_time": "Создано: 14-03-2023 19:08:43"
+        "inaccuracies": {
+          "pose_angels_inaccuracy": 10,
+          "kp_distances_inaccuracy": {
+            "right": 5,
+            "left": 0
+          }
+        },
+        "pose_description": "слова власа глаза маза. kfdsoigndsofgn 4.\n",
+        "recent_change_date_time": "Обновлено: 29-03-2023 22:55:39"
       }
     }
   ]

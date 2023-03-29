@@ -3,7 +3,6 @@ from view.img_player import ImgPlayer
 from view.web_cam_player import WebCamPlayer
 from view.constructor_player import ConstructorPlayer
 from view.control_player import ControlPlayer
-from view.pose_table_player import PoseTablePlayer
 
 from config.config import WINDOW_WIDTH, WINDOW_HEIGHT, PLAYER_HEIGHT, PLAYER_WIDTH
 
@@ -36,7 +35,7 @@ class MainGUI:
         self.frame_constructor_player = tk.Frame(self.window, height=WINDOW_HEIGHT, width=WINDOW_WIDTH)
         self.constructor_player = ConstructorPlayer(self.app, self.frame_constructor_player,
                                                     PLAYER_HEIGHT, PLAYER_WIDTH,
-                                                    self.app.get_states(), self.app.get_pose_name_list())
+                                                    list(self.app.get_states().keys()))
 
         self.pack_and_place()
 
@@ -64,13 +63,12 @@ class MainGUI:
         self.active_frame.place_forget()
         self.active_frame = self.frame_img_player
         self.active_frame.place(x=30, y=100)
-        self.img_player.load_img(self.app.get_img())
+        self.img_player.load_img(self.app.get_original_image())
 
     def switch_to_constructor_player(self):
         self.active_frame.place_forget()
         self.active_frame = self.frame_constructor_player
         self.active_frame.place(x=30, y=100)
-        self.constructor_player.load_img(self.app.get_img())
 
     def switch_to_web_cam_player(self):
         self.active_frame.place_forget()
@@ -95,19 +93,19 @@ class MainGUI:
         return file_path
 
     def classify(self):
-        if not self.control_player.is_classified():
+        if self.active_frame != self.frame_web_cam_player:
+            image = self.app.get_original_image()
+
+        if self.control_player.is_classified():
             if self.active_frame != self.frame_web_cam_player:
-                img = self.app.get_img()
-        else:
-            if self.active_frame != self.frame_web_cam_player:
-                img, label, data = self.app.classify_pose(self.app.get_img())
+                image, state, data = self.app.classify_pose(self.img_player.get_img())
 
         if self.active_frame == self.frame_web_cam_player:
             self.web_cam_player.set_detected(self.control_player.is_classified())
         elif self.active_frame == self.frame_img_player:
-            self.img_player.load_img(img)
+            self.img_player.load_img(image)
         elif self.active_frame == self.frame_constructor_player:
-            self.constructor_player.load_img(img)
+            self.constructor_player.load_img(image)
 
     def run(self):
         self.window.mainloop()

@@ -1,5 +1,6 @@
 import math
 import cv2
+import numpy as np
 
 
 class PoseDeterminator:
@@ -129,10 +130,10 @@ class PoseDeterminator:
 
 
     def determinate_pose(self, image):
-        pose = self.pose_detector_main.detect(image)
+        pose = self.pose_detector_main.detect(np.array(image))
 
         if not self.__check_number_of_known_key_points(pose) and self.high_quality_mode:
-            pose_additional = self.pose_detector_additional.detect(image)
+            pose_additional = self.pose_detector_additional.detect(np.array(image))
             pose = self.__merge_key_points(pose, pose_additional)
 
         pose = self.__check_body_wrist(pose)
