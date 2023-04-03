@@ -9,7 +9,7 @@ from view.editor_player import EditorPlayer
 
 class ConstructorPlayer:
 
-    def __init__(self, app, window, constructor_player_height, constructor_player_width, emotional_states):
+    def __init__(self, app, window, constructor_player_height, constructor_player_width, emotional_states, inaccuracy):
         self.emotional_states = emotional_states
 
         self.app = app
@@ -23,7 +23,7 @@ class ConstructorPlayer:
 
         self.frame_editor = tk.Frame(window, height=self.constructor_player_height, width=self.constructor_player_width)
         self.editor = EditorPlayer(self, self.frame_editor, height=self.constructor_player_height,
-                                   width=self.constructor_player_width, states=self.emotional_states)
+                                   width=self.constructor_player_width, states=self.emotional_states, inaccuracy=inaccuracy)
 
         self.active_frame = self.frame_pose_table_player
         self.pack_and_place()
@@ -58,9 +58,9 @@ class ConstructorPlayer:
     def cancel_edit_pose(self):
         self.switch_to_table()
 
-    def create_pose(self, image, state, pose_angels, kp_distances, pose_crossings, inaccuracies, pose_description):
-        self.app.create_pose(image=image, state=state, pose_angels=pose_angels, kp_distances=kp_distances,
-                         pose_crossings=pose_crossings, inaccuracies=inaccuracies, pose_description=pose_description)
+    def create_pose(self, image, state, pose_angels, pose_crossings, inaccuracy, pose_description):
+        self.app.create_pose(image=image, state=state, pose_angels=pose_angels, pose_crossings=pose_crossings,
+                             inaccuracy=inaccuracy, pose_description=pose_description)
         self.pose_table_player.reload_table()
         self.switch_to_table()
 

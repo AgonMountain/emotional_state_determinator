@@ -13,6 +13,11 @@ STATES = {'Очень положительное': 'green',
           'Очень отрицательное': 'red',
           'Неизвестное': 'black'}
 
+INACCURACY = {'Низкий': 10,
+              'Средний': 15,
+              'Средне-высокий': 20,
+              'Высокий': 25}
+
 openpose_folder = os.path.abspath(r"./openpose/openpose-1.6.0-binaries-win64-gpu-flir-3d/openpose/")
 openpose_demo = os.path.abspath(r"./openpose/openpose-1.6.0-binaries-win64-gpu-flir-3d/openpose/bin/OpenPoseDemo.exe")
 openpose_img_input = os.path.abspath(r"./openpose/openpose-1.6.0-binaries-win64-gpu-flir-3d/openpose/__input/")

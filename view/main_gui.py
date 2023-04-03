@@ -34,8 +34,8 @@ class MainGUI:
         # constructor player
         self.frame_constructor_player = tk.Frame(self.window, height=WINDOW_HEIGHT, width=WINDOW_WIDTH)
         self.constructor_player = ConstructorPlayer(self.app, self.frame_constructor_player,
-                                                    PLAYER_HEIGHT, PLAYER_WIDTH,
-                                                    list(self.app.get_states().keys()))
+                                                    PLAYER_HEIGHT, PLAYER_WIDTH, list(self.app.get_states().keys()),
+                                                    list(self.app.get_inaccuracy().keys()))
 
         self.pack_and_place()
 

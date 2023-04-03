@@ -5,22 +5,23 @@ from tkinter.filedialog import askopenfilename, asksaveasfile
 
 from view.main_gui import MainGUI
 from model.pose_manager import PoseManager, Pose
-from model.mediapipe_detector_v2 import MediapipeDetector
+from model.mediapipe_detector_v2 import MediaPipeDetector
 from model.openpose_detector import OpenPoseDetector
 from model.emotional_state_classifier import EmotionalStateClassifier
 from model.pose_determinator import PoseDeterminator
 
-from config.config import STATES, poses_json_file_path
+from config.config import STATES, poses_json_file_path, INACCURACY
 
 
 class App:
 
     def __init__(self):
         self.__states = STATES
+        self.__inaccuracy = INACCURACY
         self.__file_path = None
         self.__original_image = None
 
-        self.__pose_detector_main = MediapipeDetector()
+        self.__pose_detector_main = MediaPipeDetector()
         self.__pose_detector_additional = OpenPoseDetector()
         self.__pose_determinator = PoseDeterminator(self.__pose_detector_main, self.__pose_detector_additional)
         self.__emotional_state_classifier = EmotionalStateClassifier(self, self.__pose_determinator)
@@ -67,14 +68,12 @@ class App:
         # return list(self.__states.keys())
         return self.__states
 
-    def create_pose(self, image, state, pose_angels, kp_distances, pose_crossings, inaccuracies, pose_description):
-        self.__pose_manager.create_pose(image= image,
-                                        state= state,
-                                        pose_angels= pose_angels,
-                                        kp_distances= kp_distances,
-                                        pose_crossings= pose_crossings,
-                                        inaccuracies= inaccuracies,
-                                        pose_description= pose_description)
+    def get_inaccuracy(self):
+        return self.__inaccuracy
+
+    def create_pose(self, image, state, pose_angels, pose_crossings, inaccuracy, pose_description):
+        self.__pose_manager.create_pose(image= image, state= state, pose_angels= pose_angels, pose_crossings= pose_crossings,
+                                        inaccuracy= self.__inaccuracy[inaccuracy], pose_description= pose_description)
 
     def update_pose(self, pose_data, image):
         self.__pose_manager.update_pose(pose_data=pose_data, image=image)

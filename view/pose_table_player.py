@@ -61,10 +61,10 @@ class PoseTablePlayer:
             p = pose.get_img_path()
             img = Image.open(p)
             img.thumbnail((180, 180))
-            self.img_list[pose.get_id()] = ImageTk.PhotoImage(img)
-            self.table.insert(parent='', index='end', text="", image=self.img_list[pose.get_id()],
+            self.img_list[pose.get_pose_id()] = ImageTk.PhotoImage(img)
+            self.table.insert(parent='', index='end', text="", image=self.img_list[pose.get_pose_id()],
                               values=(pose.get_state(), pose.get_pose_description(), pose.get_recent_change_date_time(),
-                                      pose.get_id()))
+                                      pose.get_pose_id()))
 
     def __activate_deactivate_buttons(self):
         self.__bt_create.configure(state='disabled' if self.selected_row is not None else 'normal')

@@ -1,26 +1,18 @@
-import numpy
-from PIL import Image
 import subprocess
 import json
-
-from config.config import openpose_img_out, openpose_json_out, openpose_img_input, openpose_demo, openpose_folder
+from config.config import openpose_json_out, openpose_img_input, openpose_demo, openpose_folder
 
 
 class OpenPoseDetector:
     
-    def __init__(self, min_detection_confidence=0.2):
-        self.temporary_file_name = '\\image.png'
-        self.temporary_output_img_file_name = '\\image_rendered.png'
-        self.temporary_output_json_file_name = '\\image_keypoints.json'
-        self.min_detection_confidence = min_detection_confidence
-
-    def __load_img_to_local_folder(self, image):
-        img = numpy.array(image)
-        result = Image.fromarray(img)
-        result.save(openpose_img_input + self.temporary_file_name)
+    def __init__(self, min_detection_confidence=0.3):
+        self.__temporary_file_name = '\\image.png'
+        self.__temporary_output_img_file_name = '\\image_rendered.png'
+        self.__temporary_output_json_file_name = '\\image_keypoints.json'
+        self.__min_detection_confidence = min_detection_confidence
 
     def __get_json(self):
-        with open(openpose_json_out + self.temporary_output_json_file_name) as f:
+        with open(openpose_json_out + self.__temporary_output_json_file_name) as f:
             json_data = json.load(f)
             for d in json_data['people']:
                 # TODO если нет руки, проверить
@@ -28,6 +20,9 @@ class OpenPoseDetector:
                 hand_right_keypoints_2d = d['hand_right_keypoints_2d']
                 hand_left_keypoints_2d = d['hand_left_keypoints_2d']
                 return pose_keypoints_2d, hand_right_keypoints_2d, hand_left_keypoints_2d
+
+    def __load_img_to_local_folder(self, pil_image):
+        pil_image.save(openpose_img_input + self.__temporary_file_name)
 
     def __convert_hand_keypoints(self, hand, min_accuracy, prefix=''):
         body_key_points = {'wrist': 0,
@@ -41,9 +36,8 @@ class OpenPoseDetector:
         out = {}
         for key, val in body_key_points.items():
             val = val * 3
-            if hand[val + 2] >= min_accuracy and \
-                    (hand[val] and hand[val + 1] and hand[val + 2]):    # x0, y0, a0 -> kp doesnt exist:
-                out[prefix + key] = [hand[val], hand[val + 1]]
+            if hand[val + 2] >= min_accuracy and (hand[val] and hand[val + 1] and hand[val + 2]):    # x0, y0, a0 -> kp doesnt exist:
+                out[prefix + key] = [round(hand[val], 2), round(hand[val + 1], 2)]
         return out
 
     def __convert_body_keypoints(self, body, min_accuracy):
@@ -57,13 +51,12 @@ class OpenPoseDetector:
         out = {}
         for key, val in body_key_points.items():
             val = val * 3
-            if body[val + 2] >= min_accuracy and \
-                    (body[val] and body[val + 1] and body[val + 2]):    # x0, y0, a0 -> kp doesnt exist
-                out[key] = [body[val], body[val + 1]]
+            if body[val + 2] >= min_accuracy and (body[val] and body[val + 1] and body[val + 2]):    # x0, y0, a0 -> kp doesnt exist
+                out[key] = [round(body[val], 2), round(body[val + 1], 2)]
         return out
 
-    def detect(self, image):
-        self.__load_img_to_local_folder(image)
+    def detect_pose(self, pil_image):
+        self.__load_img_to_local_folder(pil_image)
         subprocess.call([openpose_demo,
                          '--image_dir', openpose_img_input,
                          '--write_json', openpose_json_out,
@@ -76,7 +69,7 @@ class OpenPoseDetector:
                          ],
                         cwd=openpose_folder)
 
-        pose_keypoints_2d, hand_right_keypoints_2d, hand_left_keypoints_2d = self.__get_json()
-        return {'body': self.__convert_body_keypoints(pose_keypoints_2d, self.min_detection_confidence),
-                'right_hand': self.__convert_hand_keypoints(hand_right_keypoints_2d, self.min_detection_confidence, ''),
-                'left_hand': self.__convert_hand_keypoints(hand_left_keypoints_2d, self.min_detection_confidence, '')}
+        body_keypoints_2d, hand_right_keypoints_2d, hand_left_keypoints_2d = self.__get_json()
+        return {'body': self.__convert_body_keypoints(body_keypoints_2d, self.__min_detection_confidence),
+                'right_hand': self.__convert_hand_keypoints(hand_right_keypoints_2d, self.__min_detection_confidence, ''),
+                'left_hand': self.__convert_hand_keypoints(hand_left_keypoints_2d, self.__min_detection_confidence, '')}

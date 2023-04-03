@@ -10,7 +10,7 @@ class ImgPlayer:
 
         self.img_player_height = int(img_player_height)
         self.img_player_width = int(img_player_width)
-        self.image_nparray = None
+        self.img_array = None
 
         self.app = app
 
@@ -51,13 +51,13 @@ class ImgPlayer:
         return numpy.array(img)
 
     def load_img(self, image):
-        self.image_nparray = None
+        self.img_array = None
         if image is not None:
-            self.image_nparray = self.__resize_img(image)
-        self.__update_canvas(self.image_nparray)
+            self.img_array = self.__resize_img(image)
+        self.__update_canvas(self.img_array)
 
     def get_img(self):
-        return PIL.Image.fromarray(self.image_nparray)
+        return PIL.Image.fromarray(self.img_array)
 
     def __update_canvas(self, img_array):
         if img_array is not None:

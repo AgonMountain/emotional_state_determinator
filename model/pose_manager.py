@@ -1,27 +1,27 @@
 import json
 import os
 import numpy
-from PIL import Image
-from config.config import poses_img_folder_path
 import datetime
+from PIL import Image
+
+from config.config import poses_img_folder_path
 
 
 class Pose:
 
-    def __init__(self, id, state, image_name, pose_angels, kp_distances, pose_crossings, inaccuracies, pose_description,
-                 recent_change_date_time):
-        self.id = id
+    def __init__(self, pose_id, state, image_name, pose_angels, pose_crossings, inaccuracy,
+                 pose_description, recent_change_date_time):
+        self.pose_id = pose_id
         self.state = state
         self.image_name = image_name
         self.pose_angels = pose_angels
-        self.kp_distances = kp_distances
         self.pose_crossings = pose_crossings
-        self.inaccuracies = inaccuracies
+        self.inaccuracy = inaccuracy
         self.pose_description = pose_description
         self.recent_change_date_time = recent_change_date_time
 
-    def get_id(self):
-        return self.id
+    def get_pose_id(self):
+        return self.pose_id
 
     def get_state(self):
         return self.state
@@ -35,32 +35,25 @@ class Pose:
     def get_pose_angels(self):
         return self.pose_angels
 
-    def get_kp_distances(self):
-        return self.kp_distances
-
     def get_pose_crossings(self):
         return self.pose_crossings
 
-    def get_pose_angels_inaccuracy(self):
-        return self.inaccuracies['pose_angels_inaccuracy']
-
-    def get_kp_distances_inaccuracy(self):
-        return self.inaccuracies['kp_distances_inaccuracy']
+    def get_inaccuracy(self):
+        return self.inaccuracy
 
     def get_pose_description(self):
         return self.pose_description
 
-    def set_recent_change_date_time(self, d):
-        self.recent_change_date_time = d
+    def set_recent_change_date_time(self, date_time):
+        self.recent_change_date_time = date_time
 
     def to_json(self):
-        return {"pose": {"id": self.id,
+        return {"pose": {"pose_id": self.pose_id,
                          "state": self.state,
                          "img_name": self.image_name,
                          "pose_angels": self.pose_angels,
-                         "kp_distances": self.kp_distances,
                          "pose_crossings": self.pose_crossings,
-                         "inaccuracies": self.inaccuracies,
+                         "inaccuracy": self.inaccuracy,
                          "pose_description": self.pose_description,
                          "recent_change_date_time": self.recent_change_date_time}}
 
@@ -79,15 +72,14 @@ class PoseManager:
         with open(poses_json_file_path, "r") as f:
             json_data = json.load(f)
             for d in json_data['poses']:
-                poses[d['pose']['id']] = Pose(id= d['pose']['id'],
-                                              state= d['pose']['state'],
-                                              image_name= d['pose']['img_name'],
-                                              pose_angels= d['pose']['pose_angels'],
-                                              kp_distances= d['pose']['kp_distances'],
-                                              pose_crossings= d['pose']['pose_crossings'],
-                                              inaccuracies= d['pose']['inaccuracies'],
-                                              pose_description= d['pose']['pose_description'],
-                                              recent_change_date_time= d['pose']['recent_change_date_time'])
+                poses[d['pose']['pose_id']] = Pose(pose_id= d['pose']['pose_id'],
+                                                      state= d['pose']['state'],
+                                                      image_name= d['pose']['img_name'],
+                                                      pose_angels= d['pose']['pose_angels'],
+                                                      pose_crossings= d['pose']['pose_crossings'],
+                                                      inaccuracy= d['pose']['inaccuracy'],
+                                                      pose_description= d['pose']['pose_description'],
+                                                      recent_change_date_time= d['pose']['recent_change_date_time'])
         return poses
 
     def __remove_from_json(self, pose_id):
@@ -95,7 +87,7 @@ class PoseManager:
             json_data = json.load(f)
 
         for d in json_data['poses']:
-            if d['pose']['id'] == pose_id:
+            if d['pose']['pose_id'] == pose_id:
                 i = json_data['poses'].index(d)
                 del json_data['poses'][i]
 
@@ -112,7 +104,7 @@ class PoseManager:
             json.dump(json_data, f, ensure_ascii=False)
 
     def __update_in_json(self, pose):
-        self.__remove_from_json(pose.id)
+        self.__remove_from_json(pose.pose_id)
         self.__add_to_json(pose)
 
     def __reload_poses(self):
@@ -129,14 +121,14 @@ class PoseManager:
         img_file = Image.fromarray(numpy.array(image))
         img_file.save(poses_img_folder_path + '\\' + image_name)
 
-    def create_pose(self, image, state, pose_angels, kp_distances, pose_crossings, inaccuracies, pose_description):
-        id = self.__create_id()
-        image_name = str(id) + '.png'
+    def create_pose(self, image, state, pose_angels, pose_crossings, inaccuracy, pose_description):
+        pose_id = self.__create_id()
+        image_name = str(pose_id) + '.png'
 
-        self.__add_to_json(Pose(id= id, state= state, image_name= image_name, pose_angels= pose_angels,
-                                kp_distances= kp_distances, pose_crossings= pose_crossings,
-                                pose_description= pose_description, inaccuracies=inaccuracies,
-                                recent_change_date_time= "Создано: " + self.__get_actual_date_time()))
+        self.__add_to_json(Pose(pose_id= pose_id, state= state, image_name= image_name, pose_angels= pose_angels,
+                                pose_crossings= pose_crossings, pose_description= pose_description,
+                                inaccuracy=inaccuracy,
+                                recent_change_date_time= "Создано: "+self.__get_actual_date_time()))
         self.__save_img(image_name, image)
 
         self.__reload_poses()
@@ -144,7 +136,6 @@ class PoseManager:
 
     def update_pose(self, pose_data, image):
         pose_data.set_recent_change_date_time("Обновлено: " + self.__get_actual_date_time())
-        # os.remove(pose.get_img_path())
         self.__save_img(pose_data.image_name, image)
         self.__update_in_json(pose_data)
         self.__reload_poses()
@@ -153,7 +144,6 @@ class PoseManager:
     def delete_pose(self, pose_id):
         pose = self.get_pose(pose_id)
         os.remove(pose.get_img_path())
-
         self.__remove_from_json(pose_id)
         self.__reload_poses()
         return self.get_all_id()

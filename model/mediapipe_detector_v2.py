@@ -1,27 +1,23 @@
 import cv2
 import mediapipe as mp
 import numpy
-from PIL import Image
 
 
-class MediapipeDetector:
+class MediaPipeDetector:
 
     def __init__(self, min_detection_confidence=0.5):
-        self.mp_drawing = mp.solutions.drawing_utils
-        self.mp_drawing_styles = mp.solutions.drawing_styles
-        self.mp_holistic = mp.solutions.holistic
+        self.__mp_drawing = mp.solutions.drawing_utils
+        self.__mp_drawing_styles = mp.solutions.drawing_styles
+        self.__mp_holistic = mp.solutions.holistic
 
-        self.holistic = self.mp_holistic.Holistic(static_image_mode=True,
-                                                  model_complexity=2,
-                                                  enable_segmentation=True,
-                                                  min_detection_confidence=min_detection_confidence)
+        self.__holistic = self.__mp_holistic.Holistic(static_image_mode=True, model_complexity=2, enable_segmentation=True,
+                                                      min_detection_confidence=min_detection_confidence)
 
     def __convert_hand_keypoints(self, hand_landmark, image_width, image_height, prefix=''):
         if prefix != '':
             prefix = prefix.lower() + '_'
 
-        mark = self.mp_holistic.HandLandmark
-
+        mark = self.__mp_holistic.HandLandmark
         hands_key_points = {prefix + 'wrist': [hand_landmark[mark.WRIST].x, hand_landmark[mark.WRIST].y],
                            prefix + 'thumb_finger_cmc': [hand_landmark[mark.THUMB_CMC].x, hand_landmark[mark.THUMB_CMC].y],
                            prefix + 'thumb_finger_mcp': [hand_landmark[mark.THUMB_MCP].x, hand_landmark[mark.THUMB_MCP].y],
@@ -46,13 +42,12 @@ class MediapipeDetector:
 
         out = {}
         for key, val in hands_key_points.items():
-            out[key] = [val[0] * image_width, val[1] * image_height]
+            out[key] = [round(val[0]*image_width, 2), round(val[1]*image_height, 2)]
 
         return out
 
     def __convert_body_keypoints(self, body_landmark, image_width, image_height):
-        mark = self.mp_holistic.PoseLandmark
-
+        mark = self.__mp_holistic.PoseLandmark
         body_key_points = {'nose': [body_landmark[mark.NOSE].x, body_landmark[mark.NOSE].y],
                            'right_eye': [body_landmark[mark.RIGHT_EYE].x, body_landmark[mark.RIGHT_EYE].y],
                            'left_eye': [body_landmark[mark.LEFT_EYE].x, body_landmark[mark.LEFT_EYE].y],
@@ -75,14 +70,14 @@ class MediapipeDetector:
 
         out = {}
         for key, val in body_key_points.items():
-            out[key] = [val[0] * image_width, val[1] * image_height]
+            out[key] = [round(val[0]*image_width, 2), round(val[1]*image_height, 2)]
 
         return out
 
-    def detect(self, image):
-        img = numpy.array(image)
-        image_height, image_width, _ = img.shape
-        results = self.holistic.process(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+    def detect_pose(self, pil_image):
+        nparray_image = numpy.array(pil_image)
+        image_height, image_width, _ = nparray_image.shape
+        results = self.__holistic.process(cv2.cvtColor(nparray_image, cv2.COLOR_BGR2RGB))
 
         out = {}
         if results.pose_landmarks:
