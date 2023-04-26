@@ -84,11 +84,11 @@ class PoseDrawer:
         self.right_hand_color = right_hand_color
         self.hands_color = hands_color
 
-        if 'body' in pose:
+        if pose['body'] is not None:
             self.__draw_body(pose['body'])
-        if 'left_hand' in pose:
+        if pose['left_hand'] is not None:
             self.__draw_hands(pose['left_hand'])
-        if 'right_hand' in pose:
+        if pose['right_hand'] is not None:
             self.__draw_hands(pose['right_hand'])
 
         return self.img

@@ -34,13 +34,13 @@ class ControlPlayer:
 
     def __pack_and_place(self):
         self.__frame_file.place(x=0, y=0)
-        self.__label_path_to_file.place(x=0, y=0)
-        self.__entry_path_to_file.place(x=0, y=25)
-        self.__bt_select_file.place(x=570, y=25)
-        self.__bt_switch_to_web_cam.place(x=700, y=25)
+        self.__label_path_to_file.place(x=0, y=25)
+        self.__entry_path_to_file.place(x=100, y=25)
+        self.__bt_select_file.place(x=670, y=25)
+        self.__bt_switch_to_web_cam.place(x=765, y=25)
         self.__frame_controls.place(x=0, y=65)
         self.__bt_switch_to_constructor.place(x=0, y=0)
-        self.__bt_high_quality_mode.place(x=350, y=0)
+        self.__bt_high_quality_mode.place(x=270, y=0)
         self.__bt_classify.place(x=650, y=0)
         self.__bt_save.place(x=800, y=0)
 

@@ -5,9 +5,9 @@ from model.pose_drawer import PoseDrawer
 class EmotionalStateClassifier:
 
     def __init__(self, app, pose_determinator):
-        self.app = app
-        self.pose_determinator = pose_determinator
-        self.drawer = PoseDrawer()
+        self.__app = app
+        self.__pose_determinator = pose_determinator
+        self.__drawer = PoseDrawer()
 
     def __compare_angel(self, hot_angel, cold_angel, cold_inaccuracy):
         return cold_angel - cold_inaccuracy < hot_angel < cold_angel + cold_inaccuracy
@@ -35,7 +35,7 @@ class EmotionalStateClassifier:
         return True
 
     def classify_pose(self, image):
-        hot_pose, hot_angels, hot_crossings = self.pose_determinator.determinate_pose(image)
+        hot_pose, hot_angels, hot_crossings = self.__pose_determinator.determinate_pose(image)
 
         if hot_pose is None and hot_angels is None and hot_crossings is None:
             state ='Не удалось определить позу'
@@ -43,7 +43,7 @@ class EmotionalStateClassifier:
             img = image
         else:
             state = 'Неизвестное'
-            for pose in self.app.get_poses():
+            for pose in self.__app.get_poses():
                 cold_angels = pose.get_pose_angels()
                 cold_crossings = pose.get_pose_crossings()
                 cold_angels_inaccuracy = pose.get_inaccuracy()
@@ -52,8 +52,8 @@ class EmotionalStateClassifier:
                         self.__compare_pose_angels(hot_angels, cold_angels, cold_angels_inaccuracy):
                     state = pose.get_state()
 
-            color = self.app.get_states()[state]
-            img = self.drawer.get_skeleton(hot_pose, image, color, color, color, color)
+            color = self.__app.get_states()[state]
+            img = self.__drawer.get_skeleton(hot_pose, image, color, color, color, color)
 
         font = ImageFont.truetype("segoeui.ttf", 40)
         draw = ImageDraw.Draw(image)

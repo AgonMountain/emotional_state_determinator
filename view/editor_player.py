@@ -101,7 +101,7 @@ class EditorPlayer:
         image, state, data = self.__constructor_app.classify_pose(self.img_player.get_img())
         image = self.img_player.get_img()
         state = self.field_emotional_state.get()
-        pose_description = self.text_description.get("1.0", tk.END)
+        pose_description = self.text_description.get("1.0", tk.END).replace('\n', '')
 
         inaccuracy = self.field_inaccuracy.get()
 

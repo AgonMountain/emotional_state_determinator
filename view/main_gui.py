@@ -4,7 +4,7 @@ from view.web_cam_player import WebCamPlayer
 from view.constructor_player import ConstructorPlayer
 from view.control_player import ControlPlayer
 
-from config.config import WINDOW_WIDTH, WINDOW_HEIGHT, PLAYER_HEIGHT, PLAYER_WIDTH
+from config.config import APP_WIDTH, APP_HEIGHT, PLAYER_HEIGHT, PLAYER_WIDTH
 
 
 class MainGUI:
@@ -16,23 +16,23 @@ class MainGUI:
         # main
         self.window = tk.Tk()
         self.window.title("Определение эмоционального состояния человека по его позе")
-        self.window.geometry(str(WINDOW_WIDTH) + "x" + str(WINDOW_HEIGHT))
+        self.window.geometry(str(APP_WIDTH) + "x" + str(APP_HEIGHT))
         self.window.resizable(0, 0)
 
         # control player
-        self.frame_control_player = tk.Frame(self.window, height=WINDOW_HEIGHT, width=WINDOW_WIDTH)
-        self.control_player = ControlPlayer(self, self.frame_control_player, WINDOW_HEIGHT, WINDOW_WIDTH)
+        self.frame_control_player = tk.Frame(self.window, height=APP_HEIGHT, width=APP_WIDTH)
+        self.control_player = ControlPlayer(self, self.frame_control_player, APP_HEIGHT, APP_WIDTH)
 
         # img player
         self.frame_img_player = tk.Frame(self.window, height=PLAYER_HEIGHT, width=PLAYER_WIDTH)
         self.img_player = ImgPlayer(self.app, self.frame_img_player, PLAYER_HEIGHT, PLAYER_WIDTH)
 
         # webcam player
-        self.frame_web_cam_player = tk.Frame(self.window, height=WINDOW_HEIGHT, width=WINDOW_WIDTH)
+        self.frame_web_cam_player = tk.Frame(self.window, height=APP_HEIGHT, width=APP_WIDTH)
         self.web_cam_player = WebCamPlayer(self.app, self.frame_web_cam_player, PLAYER_HEIGHT, PLAYER_WIDTH)
 
         # constructor player
-        self.frame_constructor_player = tk.Frame(self.window, height=WINDOW_HEIGHT, width=WINDOW_WIDTH)
+        self.frame_constructor_player = tk.Frame(self.window, height=APP_HEIGHT, width=APP_WIDTH)
         self.constructor_player = ConstructorPlayer(self.app, self.frame_constructor_player,
                                                     PLAYER_HEIGHT, PLAYER_WIDTH, list(self.app.get_states().keys()),
                                                     list(self.app.get_inaccuracy().keys()))

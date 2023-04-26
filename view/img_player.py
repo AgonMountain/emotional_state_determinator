@@ -57,6 +57,10 @@ class ImgPlayer:
         self.__update_canvas(self.img_array)
 
     def get_img(self):
+        '''
+
+        :return: pil image
+        '''
         return PIL.Image.fromarray(self.img_array)
 
     def __update_canvas(self, img_array):

@@ -101,19 +101,19 @@ class PoseDeterminator:
                         out['crossing,%s,%s,%s,%s' % (v_1[0], v_1[1], v_2[0], v_2[1])] = intersection
         return out
 
-    def __reset_wrist(self, pose_and_hands):
+    def __reset_wrist(self, pose):
         # right_hand in body and in hand list
-        if 'right_hand' in pose_and_hands and 'wrist' in pose_and_hands['right_hand']:
-            pose_and_hands['body']['right_wrist'] = pose_and_hands['right_hand']['wrist']
-        if 'right_hand' in pose_and_hands and 'right_wrist' in pose_and_hands['body']:
-            pose_and_hands['right_hand']['wrist'] = pose_and_hands['body']['right_wrist']
+        if pose['right_hand'] is not None and 'wrist' in pose['right_hand']:
+            pose['body']['right_wrist'] = pose['right_hand']['wrist']
+        if pose['right_hand'] is not None and 'right_wrist' in pose['body']:
+            pose['right_hand']['wrist'] = pose['body']['right_wrist']
 
         # left_hand in body and in hand list
-        if 'left_hand' in pose_and_hands and 'wrist' in pose_and_hands['left_hand']:
-            pose_and_hands['body']['left_wrist'] = pose_and_hands['left_hand']['wrist']
-        if 'left_hand' in pose_and_hands and 'left_wrist' in pose_and_hands['body']:
-            pose_and_hands['left_hand']['wrist'] = pose_and_hands['body']['left_wrist']
-        return pose_and_hands
+        if pose['left_hand'] is not None and 'wrist' in pose['left_hand']:
+            pose['body']['left_wrist'] = pose['left_hand']['wrist']
+        if pose['left_hand'] is not None and 'left_wrist' in pose['body']:
+            pose['left_hand']['wrist'] = pose['body']['left_wrist']
+        return pose
 
     def __is_top_part_body_only(self, pose):
         down_part_body = ['left_hip', 'left_knee', 'left_ankle',
@@ -125,11 +125,11 @@ class PoseDeterminator:
 
     def __check_number_of_known_key_points(self, pose):
         is_ok = True
-        if 'body' not in pose or (len(pose['body']) <= (17 * 0.8) and not self.__is_top_part_body_only(pose)):
+        if pose['body'] is None or (len(pose['body']) <= (17 * 0.8) and not self.__is_top_part_body_only(pose)):
             is_ok = False
-        if 'right_hand' not in pose or len(pose['right_hand']) <= (21 * 0.8):
+        if pose['right_hand'] is None or len(pose['right_hand']) <= (21 * 0.8):
             is_ok = False
-        if 'left_hand' not in pose or len(pose['left_hand']) <= (21 * 0.8):
+        if pose['left_hand'] is None or len(pose['left_hand']) <= (21 * 0.8):
             is_ok = False
         return is_ok
 
@@ -138,25 +138,25 @@ class PoseDeterminator:
 
     def __merge_key_points(self, main_pose, additional_pose):
         pose = {}
-        pose['body'] = self.__merge_dicts(additional_pose['body'] if 'body' in additional_pose else {},
-                                          main_pose['body'] if 'body' in main_pose else {},)
-        pose['right_hand'] = self.__merge_dicts(additional_pose['right_hand'] if 'right_hand' in additional_pose else {},
-                                          main_pose['right_hand'] if 'right_hand' in main_pose else {},)
-        pose['left_hand'] = self.__merge_dicts(additional_pose['left_hand'] if 'left_hand' in additional_pose else {},
-                                          main_pose['left_hand'] if 'left_hand' in main_pose else {},)
+        pose['body'] = self.__merge_dicts(main_pose['body'] if  main_pose['body'] is not None else {},
+                                          additional_pose['body'] if additional_pose['body'] is not None else {})
+        pose['right_hand'] = self.__merge_dicts(main_pose['right_hand'] if main_pose['right_hand'] is not None else {},
+                                                additional_pose['right_hand'] if additional_pose['right_hand'] is not None else {})
+        pose['left_hand'] = self.__merge_dicts(main_pose['left_hand'] if main_pose['left_hand'] is not None else {},
+                                               additional_pose['left_hand'] if additional_pose['left_hand'] is not None else {})
         return pose
 
     def determinate_pose(self, pil_image):
-        pose_and_hands = self.__pose_detector.detect_pose(pil_image)
+        pose = self.__pose_detector.detect_pose(pil_image)
 
-        if not self.__check_number_of_known_key_points(pose_and_hands) and self.__is_high_quality_mode:
+        if not self.__check_number_of_known_key_points(pose) and self.__is_high_quality_mode:
             pose_additional = self.__high_quality_pose_detector.detect_pose(pil_image)
-            pose_and_hands = self.__merge_key_points(pose_and_hands, pose_additional)
+            pose = self.__merge_key_points(pose, pose_additional)
 
-        if 'body' in pose_and_hands:
-            pose_and_hands = self.__reset_wrist(pose_and_hands)
-            crossings = self.__get_pose_crossings(pose_and_hands['body'])
-            angels = self.__get_pose_angles(pose_and_hands['body'], crossings)
-            return pose_and_hands, angels, crossings
+        if pose['body'] is not None:
+            pose = self.__reset_wrist(pose)
+            crossings = self.__get_pose_crossings(pose['body'])
+            angels = self.__get_pose_angles(pose['body'], crossings)
+            return pose, angels, crossings
 
         return None, None, None

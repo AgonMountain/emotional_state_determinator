@@ -4,7 +4,7 @@ import numpy
 import datetime
 from PIL import Image
 
-from config.config import poses_img_folder_path
+from config.config import POSE_IMAGES_FOLDER
 
 
 class Pose:
@@ -27,7 +27,7 @@ class Pose:
         return self.state
 
     def get_img_path(self):
-        return poses_img_folder_path + '\\' + self.image_name
+        return POSE_IMAGES_FOLDER + '\\' + self.image_name
 
     def get_recent_change_date_time(self):
         return self.recent_change_date_time
@@ -119,7 +119,7 @@ class PoseManager:
 
     def __save_img(self, image_name, image):
         img_file = Image.fromarray(numpy.array(image))
-        img_file.save(poses_img_folder_path + '\\' + image_name)
+        img_file.save(POSE_IMAGES_FOLDER + '\\' + image_name)
 
     def create_pose(self, image, state, pose_angels, pose_crossings, inaccuracy, pose_description):
         pose_id = self.__create_id()

@@ -5,12 +5,12 @@ from tkinter.filedialog import askopenfilename, asksaveasfile
 
 from view.main_gui import MainGUI
 from model.pose_manager import PoseManager, Pose
-from model.mediapipe_detector_v2 import MediaPipeDetector
+from model.mediapipe_detector_v2 import MediaPipeHolisticDetector
 from model.openpose_detector import OpenPoseDetector
 from model.emotional_state_classifier import EmotionalStateClassifier
 from model.pose_determinator import PoseDeterminator
 
-from config.config import STATES, poses_json_file_path, INACCURACY
+from config.config import STATES, POSE_DATA_JSON, INACCURACY
 
 
 class App:
@@ -21,11 +21,11 @@ class App:
         self.__file_path = None
         self.__original_image = None
 
-        self.__pose_detector_main = MediaPipeDetector()
+        self.__pose_detector_main = MediaPipeHolisticDetector()
         self.__pose_detector_additional = OpenPoseDetector()
         self.__pose_determinator = PoseDeterminator(self.__pose_detector_main, self.__pose_detector_additional)
         self.__emotional_state_classifier = EmotionalStateClassifier(self, self.__pose_determinator)
-        self.__pose_manager = PoseManager(poses_json_file_path)
+        self.__pose_manager = PoseManager(POSE_DATA_JSON)
         self.__gui = MainGUI(self)
 
     def __date_time(self):
@@ -41,11 +41,11 @@ class App:
 
         return self.__file_path, self.__original_image.copy() if self.__original_image is not None else None
 
-    def save_file(self, image):
+    def save_file(self, pil_image):
         file = asksaveasfile(mode='w', defaultextension=".png", filetypes=[("png", ".png"), ("jpg", ".jpg")],
                              initialfile='Снимок_' + self.__date_time())
         if file:
-            Image.fromarray(image).save(file.name)
+            pil_image.save(file.name)
 
     def set_high_quality_mode(self, b):
         self.__pose_determinator.set_high_quality_mode(b)
