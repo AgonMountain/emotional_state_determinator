@@ -1,4 +1,91 @@
 {
   "poses": [
+    {
+      "pose": {
+        "pose_id": 1,
+        "state": "Отрицательное",
+        "img_name": "1.png",
+        "pose_angels": {
+          "angel,right_elbow,?,left_elbow": 119.4,
+          "angel,right_elbow,?,left_shoulder": 250.3,
+          "angel,right_elbow,?,right_hip": 72.38,
+          "angel,right_elbow,?,left_hip": 51.64,
+          "angel,right_elbow,?,right_knee": 62.36,
+          "angel,right_elbow,?,left_knee": 64.99,
+          "angel,right_elbow,?,right_ankle": 62.34,
+          "angel,right_knee,?,left_shoulder": 90.21,
+          "angel,right_ankle,?,left_shoulder": 90.24,
+          "angel,right_ankle,?,left_hip": 89.04,
+          "angel,left_shoulder,?,left_elbow": 33.18,
+          "angel,left_shoulder,?,left_knee": 87.59,
+          "angel,left_shoulder,?,left_ankle": 91.66,
+          "angel,right_elbow,right_shoulder,right_hip": 22.99,
+          "angel,right_wrist,right_elbow,right_shoulder": 49.4,
+          "angel,right_shoulder,right_hip,right_knee": 190.02,
+          "angel,right_hip,right_knee,right_ankle": 180.02,
+          "angel,left_elbow,left_shoulder,left_hip": 18.65,
+          "angel,left_wrist,left_elbow,left_shoulder": 49.1,
+          "angel,left_shoulder,left_hip,left_knee": 166.65,
+          "angel,left_hip,left_knee,left_ankle": 184.07
+        },
+        "pose_crossings": {
+          "crossing,right_wrist,right_elbow,left_wrist,left_elbow": [
+            374.76,
+            313.81
+          ],
+          "crossing,right_wrist,right_elbow,left_elbow,left_shoulder": [
+            479.76,
+            261.0
+          ],
+          "crossing,right_wrist,right_elbow,right_shoulder,right_hip": [
+            287.53,
+            357.68
+          ],
+          "crossing,right_wrist,right_elbow,left_shoulder,left_hip": [
+            474.08,
+            263.85
+          ],
+          "crossing,right_wrist,right_elbow,right_hip,right_knee": [
+            311.07,
+            345.85
+          ],
+          "crossing,right_wrist,right_elbow,left_hip,left_knee": [
+            420.58,
+            290.76
+          ],
+          "crossing,right_wrist,right_elbow,right_knee,right_ankle": [
+            311.21,
+            345.77
+          ],
+          "crossing,right_hip,right_knee,right_shoulder,left_shoulder": [
+            312.74,
+            243.45
+          ],
+          "crossing,right_knee,right_ankle,right_shoulder,left_shoulder": [
+            312.92,
+            243.45
+          ],
+          "crossing,right_knee,right_ankle,right_hip,left_hip": [
+            308.79,
+            490.12
+          ],
+          "crossing,right_shoulder,left_shoulder,left_wrist,left_elbow": [
+            269.23,
+            242.9
+          ],
+          "crossing,right_shoulder,left_shoulder,left_hip,left_knee": [
+            419.22,
+            244.79
+          ],
+          "crossing,right_shoulder,left_shoulder,left_knee,left_ankle": [
+            451.65,
+            245.2
+          ]
+        },
+        "inaccuracy": 15,
+        "pose_description": "Поза1",
+        "recent_change_date_time": "Обновлено: 30-04-2023 23:49:01"
+      }
+    }
   ]
 }

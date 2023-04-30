@@ -40,13 +40,13 @@ class EditorPlayer:
                                                   state='readonly')
         self.field_inaccuracy.set(self.__inaccuracy[0])
 
-        self.bt_save = tk.Button(self.frame_editor, text='Сохранить', command=self.__save)
-        self.bt_cancel = tk.Button(self.frame_editor, text='Отменить', command=self.__undo_fields_changes)
+        self.bt_save = tk.Button(self.frame_editor, text='Сохранить изменения', command=self.__save)
+        self.bt_cancel = tk.Button(self.frame_editor, text='Отменить изменения', command=self.__undo_fields_changes)
         self.bt_exit = tk.Button(self.frame_editor, text='Выйти из редактора', command=self.__exit_from_editor)
 
         self.__pack_and_place()
 
-        self.pose_pil_image, self.pose_data = None, None
+        self.pose_pil_image, self.pose_id, self.pose_description, self.pose_inaccuracy = None, None, None, None
         self.__update_pose_fields()
 
     def __pack_and_place(self):
@@ -70,9 +70,9 @@ class EditorPlayer:
         self.label_description.place(x=0, y=0)
         self.text_description.place(x=0, y=30)
 
-        self.bt_save.place(x=self.frame_image_player['width'], y=self.__editor_player_height - 100)
-        self.bt_cancel.place(x=self.frame_image_player['width']+90, y=self.__editor_player_height - 100)
-        self.bt_exit.place(x=self.frame_image_player['width'], y=self.__editor_player_height - 50)
+        self.bt_save.place(x=self.frame_image_player['width'], y=self.__editor_player_height - 200)
+        self.bt_cancel.place(x=self.frame_image_player['width'], y=self.__editor_player_height - 150)
+        self.bt_exit.place(x=self.frame_image_player['width'], y=self.__editor_player_height - 100)
 
     def __set_editor_fields(self, emotional_state, inaccuracy, pose_description):
         self.field_emotional_state.set(emotional_state)
@@ -80,49 +80,60 @@ class EditorPlayer:
         self.text_description.delete("1.0", 'end')
         self.text_description.insert("1.0", pose_description)
 
-    def __update_pose_fields(self):
-        self.img_player.load_img(self.pose_pil_image)
-
-        if self.pose_data is not None:
-            self.__set_editor_fields(self.pose_data.get_state(), self.pose_data.get_inaccuracy(),
-                                     self.pose_data.get_pose_description())
-        else:
-            self.__set_editor_fields(self.__states[0], self.__inaccuracy[0], "")
-
     def __exit_from_editor(self):
-        self.pose_pil_image, self.pose_data = None, None    # clear editor before it close
+        # clear editor before it close
+        self.pose_pil_image, self.pose_id, self.pose_description, self.pose_inaccuracy = None, None, None, None
+
         self.__update_pose_fields() # clear editor before it close
         self.__constructor_app.switch_to_table()
 
     def __undo_fields_changes(self):
         self.__update_pose_fields()
 
-    def __save(self):
-        image, state, data = self.__constructor_app.classify_pose(self.img_player.get_img())
-        image = self.img_player.get_img()
-        state = self.field_emotional_state.get()
-        pose_description = self.text_description.get("1.0", tk.END).replace('\n', '')
-
-        inaccuracy = self.field_inaccuracy.get()
-
-        # if its create new pose
-        if self.pose_data is None:
-            self.__constructor_app.create_pose(image=image, state=state, pose_angels=data['angels'],
-                                               pose_crossings=data['crossings'], inaccuracy=inaccuracy,
-                                               pose_description=pose_description)
-        # else its update pose
-        else:
-            self.pose_data.state = state
-            self.pose_data.inaccuracy = inaccuracy
-            self.pose_data.pose_description = pose_description
-            self.pose_data.pose_angels = data['angels']
-            self.pose_data.kp_distances = data['distances']
-            self.pose_data.pose_crossings = data['crossings']
-            self.__constructor_app.update_pose(pose_data=self.pose_data, image=image)
-
     def load_image_for_new_pose(self, pil_image):
         self.img_player.load_img(pil_image)
 
-    def set_active_exists_pose(self, pose_pil_image, pose_data):
-        self.pose_pil_image, self.pose_data = pose_pil_image, pose_data
+    def __update_pose_fields(self):
+        self.img_player.load_img(self.pose_pil_image)
+
+        # if its update pose
+        if self.pose_id is not None:
+            self.__set_editor_fields(self.pose_state,
+                                     self.pose_inaccuracy,
+                                     self.pose_description)
+        # else its create new pose
+        else:
+            self.__set_editor_fields(self.__states[0], self.__inaccuracy[0], "")
+
+    def __save(self):
+
+        image = self.img_player.get_img()
+
+        pose_description = self.text_description.get("1.0", tk.END).replace('\n', '')
+        state = self.field_emotional_state.get()
+        inaccuracy = self.field_inaccuracy.get()
+
+        # if its create new pose
+        if self.pose_id is None:
+            self.__constructor_app.create_pose(image=image,
+                                               state=state,
+                                               inaccuracy=inaccuracy,
+                                               pose_description=pose_description)
+        # else its update pose
+        else:
+            self.__constructor_app.update_pose(id=self.pose_id,
+                                               image=image,
+                                               state=state,
+                                               inaccuracy=inaccuracy,
+                                               pose_description=pose_description)
+
+
+
+    def set_active_exists_pose(self, id, pil_image, state, inaccuracy, description):
+        self.pose_id = id
+        self.pose_pil_image = pil_image
+        self.pose_state = state
+        self.pose_inaccuracy = inaccuracy
+        self.pose_description = description
+
         self.__update_pose_fields()

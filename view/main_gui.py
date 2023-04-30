@@ -32,10 +32,14 @@ class MainGUI:
         self.web_cam_player = WebCamPlayer(self.app, self.frame_web_cam_player, PLAYER_HEIGHT, PLAYER_WIDTH)
 
         # constructor player
-        self.frame_constructor_player = tk.Frame(self.window, height=APP_HEIGHT, width=APP_WIDTH)
-        self.constructor_player = ConstructorPlayer(self.app, self.frame_constructor_player,
-                                                    PLAYER_HEIGHT, PLAYER_WIDTH, list(self.app.get_states().keys()),
-                                                    list(self.app.get_inaccuracy().keys()))
+        self.frame_constructor_player = tk.Frame(self.window,
+                                                 height=APP_HEIGHT,
+                                                 width=APP_WIDTH)
+
+        self.constructor_player = ConstructorPlayer(self.app,
+                                                    self.frame_constructor_player,
+                                                    PLAYER_HEIGHT,
+                                                    PLAYER_WIDTH)
 
         self.pack_and_place()
 

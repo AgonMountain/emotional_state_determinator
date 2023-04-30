@@ -62,7 +62,12 @@ class App:
         return poses
 
     def get_pose(self, pose_id):
-        return self.__pose_manager.get_pose_image(pose_id), self.__pose_manager.get_pose(pose_id)
+        pose_image = self.__pose_manager.get_pose_image(pose_id)
+        pose_data = self.__pose_manager.get_pose(pose_id)
+
+        # pose_data.inaccuracy = list(self.__inaccuracy.keys())[list(self.__inaccuracy.values()).index(pose_data.inaccuracy)]
+
+        return pose_image, pose_data
 
     def get_states(self):
         # return list(self.__states.keys())
@@ -71,12 +76,26 @@ class App:
     def get_inaccuracy(self):
         return self.__inaccuracy
 
-    def create_pose(self, image, state, pose_angels, pose_crossings, inaccuracy, pose_description):
-        self.__pose_manager.create_pose(image= image, state= state, pose_angels= pose_angels, pose_crossings= pose_crossings,
-                                        inaccuracy= self.__inaccuracy[inaccuracy], pose_description= pose_description)
+    def create_pose(self, image, state, inaccuracy, pose_description):
+        img, st, data = self.classify_pose(image)   # TODO st и state, если существует похожая то возвращаем False
 
-    def update_pose(self, pose_data, image):
-        self.__pose_manager.update_pose(pose_data=pose_data, image=image)
+        self.__pose_manager.create_pose(image=image,
+                                        state=state,
+                                        pose_angels=data['angels'],
+                                        pose_crossings=data['crossings'],
+                                        inaccuracy=self.__inaccuracy[inaccuracy],
+                                        pose_description=pose_description)
+
+    def update_pose(self, id, image, state, inaccuracy, description):
+        img, st, data = self.classify_pose(image) # TODO st и state, если существует похожая то возвращаем False
+
+        self.__pose_manager.update_pose(id=id,
+                                        image=image,
+                                        state=state,
+                                        pose_angels=data['angels'],
+                                        pose_crossings=data['crossings'],
+                                        inaccuracy=self.__inaccuracy[inaccuracy],
+                                        description=description)
 
     def delete_pose(self, pose_id):
         self.__pose_manager.delete_pose(pose_id=pose_id)
