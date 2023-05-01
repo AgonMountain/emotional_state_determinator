@@ -86,6 +86,65 @@
         "pose_description": "Поза1",
         "recent_change_date_time": "Обновлено: 30-04-2023 23:49:01"
       }
+    },
+    {
+      "pose": {
+        "pose_id": 2,
+        "state": "Нейтральное",
+        "img_name": "2.png",
+        "pose_angels": {
+          "angel,right_elbow,?,right_knee": 218.94,
+          "angel,right_elbow,?,right_ankle": 215.52,
+          "angel,right_elbow,?,left_ankle": 217.34,
+          "angel,right_knee,?,left_shoulder": 97.82,
+          "angel,right_ankle,?,left_shoulder": 94.39,
+          "angel,left_shoulder,?,left_knee": 92.88,
+          "angel,left_shoulder,?,left_ankle": 96.22,
+          "angel,right_elbow,right_shoulder,left_shoulder": 106.29,
+          "angel,right_elbow,right_shoulder,right_hip": 27.44,
+          "angel,right_wrist,right_elbow,right_shoulder": 47.42,
+          "angel,right_shoulder,right_hip,right_knee": 198.96,
+          "angel,right_hip,right_knee,right_ankle": 176.57,
+          "angel,left_elbow,left_shoulder,right_shoulder": 97.56,
+          "angel,left_elbow,left_shoulder,left_hip": 21.86,
+          "angel,left_wrist,left_elbow,left_shoulder": 36.89,
+          "angel,left_shoulder,left_hip,left_knee": 168.57,
+          "angel,left_hip,left_knee,left_ankle": 183.34
+        },
+        "pose_crossings": {
+          "crossing,right_wrist,right_elbow,right_hip,right_knee": [
+            357.84,
+            536.87
+          ],
+          "crossing,right_wrist,right_elbow,right_knee,right_ankle": [
+            350.6,
+            527.69
+          ],
+          "crossing,right_wrist,right_elbow,left_knee,left_ankle": [
+            481.03,
+            693.04
+          ],
+          "crossing,right_hip,right_knee,right_shoulder,left_shoulder": [
+            361.49,
+            228.26
+          ],
+          "crossing,right_knee,right_ankle,right_shoulder,left_shoulder": [
+            336.38,
+            231.4
+          ],
+          "crossing,right_shoulder,left_shoulder,left_hip,left_knee": [
+            448.31,
+            217.39
+          ],
+          "crossing,right_shoulder,left_shoulder,left_knee,left_ankle": [
+            473.3,
+            214.26
+          ]
+        },
+        "inaccuracy": 25,
+        "pose_description": "Поза22",
+        "recent_change_date_time": "Обновлено: 01-05-2023 14:00:35"
+      }
     }
   ]
 }

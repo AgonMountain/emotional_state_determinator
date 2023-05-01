@@ -93,6 +93,9 @@ class EditorPlayer:
     def load_image_for_new_pose(self, pil_image):
         self.img_player.load_img(pil_image)
 
+    def get_image(self):
+        return self.img_player.get_img()
+
     def __update_pose_fields(self):
         self.img_player.load_img(self.pose_pil_image)
 

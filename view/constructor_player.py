@@ -56,6 +56,9 @@ class ConstructorPlayer:
     def load_img(self, img):
         self.editor.load_image_for_new_pose(img)
 
+    def get_img(self):
+        return self.editor.get_image()
+
     def go_to_update_pose(self, pose_id):
         self.__switch_to_editor()
         pose_image, pose_data = self.get_pose(pose_id)

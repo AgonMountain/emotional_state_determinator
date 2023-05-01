@@ -12,19 +12,18 @@ class PoseDeterminator:
                                    ('left_wrist', 'left_elbow'),
                                    ('right_elbow', 'right_shoulder'),
                                    ('left_elbow', 'left_shoulder'),
-                                   ('right_shoulder', 'right_hip'),
-                                   ('left_shoulder', 'left_hip'),
                                    ('right_hip', 'right_knee'),
                                    ('left_hip', 'left_knee'),
                                    ('right_knee', 'right_ankle'),
                                    ('left_knee', 'left_ankle'),
-                                   ('right_shoulder', 'left_shoulder'),
-                                   ('right_hip', 'left_hip')]
+                                   ('right_shoulder', 'left_shoulder')]
 
-        self.__body_angel_list = [('right_elbow', 'right_shoulder', 'right_hip'),
+        self.__body_angel_list = [('right_elbow', 'right_shoulder', 'left_shoulder'),
+                                  ('right_elbow', 'right_shoulder', 'right_hip'),
                                   ('right_wrist', 'right_elbow', 'right_shoulder'),
                                   ('right_shoulder', 'right_hip', 'right_knee'),
                                   ('right_hip', 'right_knee', 'right_ankle'),
+                                  ('left_elbow', 'left_shoulder', 'right_shoulder'),
                                   ('left_elbow', 'left_shoulder', 'left_hip'),
                                   ('left_wrist', 'left_elbow', 'left_shoulder'),
                                   ('left_shoulder', 'left_hip', 'left_knee'),

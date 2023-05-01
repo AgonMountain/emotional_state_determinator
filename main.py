@@ -65,8 +65,6 @@ class App:
         pose_image = self.__pose_manager.get_pose_image(pose_id)
         pose_data = self.__pose_manager.get_pose(pose_id)
 
-        # pose_data.inaccuracy = list(self.__inaccuracy.keys())[list(self.__inaccuracy.values()).index(pose_data.inaccuracy)]
-
         return pose_image, pose_data
 
     def get_states(self):

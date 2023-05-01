@@ -97,13 +97,16 @@ class MainGUI:
         return file_path
 
     def classify(self):
-        if self.active_frame != self.frame_web_cam_player:
-            image = self.app.get_original_image()
-
+        # image for set classified image in player
         if self.control_player.is_classified():
             if self.active_frame != self.frame_web_cam_player:
-                image, state, data = self.app.classify_pose(self.img_player.get_img())
+                image, state, data = self.app.classify_pose(self.app.get_original_image())
 
+        # original image for set unclassified image in player
+        elif self.active_frame != self.frame_web_cam_player:
+            image = self.app.get_original_image()
+
+        # set image
         if self.active_frame == self.frame_web_cam_player:
             self.web_cam_player.set_detected(self.control_player.is_classified())
         elif self.active_frame == self.frame_img_player:

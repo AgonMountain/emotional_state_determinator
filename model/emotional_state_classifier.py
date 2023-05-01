@@ -48,8 +48,7 @@ class EmotionalStateClassifier:
                 cold_crossings = pose.get_pose_crossings()
                 cold_angels_inaccuracy = pose.get_inaccuracy()
 
-                if self.__compare_pose_crossings(hot_crossings, cold_crossings) and \
-                        self.__compare_pose_angels(hot_angels, cold_angels, cold_angels_inaccuracy):
+                if self.__compare_pose_angels(hot_angels, cold_angels, cold_angels_inaccuracy): #self.__compare_pose_crossings(hot_crossings, cold_crossings) and \
                     state = pose.get_state()
 
             color = self.__app.get_states()[state]
