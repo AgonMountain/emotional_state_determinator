@@ -2,9 +2,9 @@ import re
 import tkinter as tk
 from tkinter import ttk
 from config.config import *
-from view.img_player import ImgPlayer
+from view.image_player import ImgPlayer
 from view.pose_table_player import PoseTablePlayer
-from view.editor_player import EditorPlayer
+from view.pose_editor_player import EditorPlayer
 
 
 class ConstructorPlayer:

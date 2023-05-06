@@ -32,16 +32,18 @@ class PoseTablePlayer:
         self.style.configure("Treeview.Heading", font=("Helvetica", 11, "bold"))
         self.style.configure("Treeview", rowheight=130)
 
-        self.table['columns'] = ("#1", "#2", "#3")
+        self.table['columns'] = ("#1", "#2", "#3", '#4')
         self.table.column("#0", width=220, stretch='NO')
-        self.table.column("#1", width=200, anchor='w')
+        self.table.column("#1", width=50, anchor='w')
         self.table.column("#2", width=200, anchor='w')
-        self.table.column("#3", width=300, anchor='w')
+        self.table.column("#3", width=200, anchor='w')
+        self.table.column("#4", width=300, anchor='w')
 
         self.table.heading("#0", anchor='w', text='Изображение')
-        self.table.heading("#1", anchor='w', text="Оценка")
-        self.table.heading("#2", anchor='w', text="Описание")
-        self.table.heading("#3", anchor='w', text="Дата последнего изменения")
+        self.table.heading("#1", anchor='w', text='id')
+        self.table.heading("#2", anchor='w', text="Оценка")
+        self.table.heading("#3", anchor='w', text="Описание")
+        self.table.heading("#4", anchor='w', text="Дата последнего изменения")
 
         self.reload_table()
 
@@ -63,7 +65,10 @@ class PoseTablePlayer:
             img.thumbnail((180, 180))
             self.img_list[pose.get_pose_id()] = ImageTk.PhotoImage(img)
             self.table.insert(parent='', index='end', text="", image=self.img_list[pose.get_pose_id()],
-                              values=(pose.get_state(), pose.get_pose_description(), pose.get_recent_change_date_time(),
+                              values=(pose.get_pose_id(),
+                                      pose.get_state(),
+                                      pose.get_pose_description(),
+                                      pose.get_recent_change_date_time(),
                                       pose.get_pose_id()))
 
     def __activate_deactivate_buttons(self):
@@ -73,7 +78,7 @@ class PoseTablePlayer:
 
     def __select_table_item(self, e):
         self.selected_row = self.table.focus() if self.selected_row != self.table.focus() else None
-        self.pose_id = self.table.item(self.table.focus())['values'][3] if self.selected_row is not None else None
+        self.pose_id = self.table.item(self.table.focus())['values'][0] if self.selected_row is not None else None
 
         if self.selected_row is None and len(self.table.selection()) > 0:
             self.table.selection_remove(self.table.selection()[0])

@@ -5,7 +5,7 @@ from config.config import openpose_json_out, openpose_img_input, openpose_demo, 
 
 class OpenPoseDetector:
     
-    def __init__(self, min_detection_confidence=0.3):
+    def __init__(self, min_detection_confidence=0.4):
         self.__temporary_file_name = '\\image.png'
         self.__temporary_output_json_file_name = '\\image_keypoints.json'
         self.__min_detection_confidence = min_detection_confidence
@@ -33,9 +33,9 @@ class OpenPoseDetector:
         out = {}
         for key, val in body_key_points.items():
             val = val * 3
-            if hand[val + 2] >= min_accuracy and (hand[val] and hand[val + 1] and hand[val + 2]):
-                # x0, y0, a0 -> kp doesnt exist:
-                out[key] = [round(hand[val], 2), round(hand[val + 1], 2)]
+            if hand[val + 2] >= min_accuracy and \
+                    (hand[val] and hand[val + 1] and hand[val + 2]): # x0, y0, a0 -> kp doesnt exist:
+                out[key] = (round(hand[val], 2), round(hand[val + 1], 2))
         return out
 
     def __convert_body_keypoints(self, body, min_accuracy):
@@ -49,10 +49,21 @@ class OpenPoseDetector:
         out = {}
         for key, val in body_key_points.items():
             val = val * 3
-            if body[val + 2] >= min_accuracy and (body[val] and body[val + 1] and body[val + 2]):
-                # x0, y0, a0 -> kp doesnt exist
-                out[key] = [round(body[val], 2), round(body[val + 1], 2)]
+            if body[val + 2] >= min_accuracy and \
+                    (body[val] and body[val + 1] and body[val + 2]): # x0, y0, a0 -> kp doesnt exist
+                out[key] = (round(body[val], 2), round(body[val + 1], 2))
         return out
+
+    def __reset_wrist(self, pose):
+        if pose['right_hand'] is not None and 'wrist' in pose['right_hand']:
+            pose['body']['right_wrist'] = pose['right_hand']['wrist']
+        if pose['left_hand'] is not None and 'wrist' in pose['left_hand']:
+            pose['body']['left_wrist'] = pose['left_hand']['wrist']
+        if pose['right_hand'] is not None and 'right_wrist' in pose['body']:
+            pose['right_hand']['wrist'] = pose['body']['right_wrist']
+        if pose['left_hand'] is not None and 'left_wrist' in pose['body']:
+            pose['left_hand']['wrist'] = pose['body']['left_wrist']
+        return pose
 
     def detect_pose(self, pil_image):
         self.__load_img_to_local_folder(pil_image)
@@ -66,8 +77,12 @@ class OpenPoseDetector:
                          '--render_pose', '0',
                          ],
                         cwd=openpose_folder)
-
         body, right_hand, left_hand = self.__get_json()
-        return {'body': self.__convert_body_keypoints(body, self.__min_detection_confidence),
+
+        pose = {'body': self.__convert_body_keypoints(body, self.__min_detection_confidence),
                 'right_hand': self.__convert_hand_keypoints(right_hand, self.__min_detection_confidence),
                 'left_hand': self.__convert_hand_keypoints(left_hand, self.__min_detection_confidence)}
+
+        pose = self.__reset_wrist(pose)
+
+        return pose

@@ -7,7 +7,7 @@ import imutils
 import numpy
 from PIL import Image
 
-from view.img_player import ImgPlayer
+from view.image_player import ImgPlayer
 
 
 class WebCamPlayer:

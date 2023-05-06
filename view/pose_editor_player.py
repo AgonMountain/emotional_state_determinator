@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
-from view.img_player import ImgPlayer
+from view.image_player import ImgPlayer
 
 
 class EditorPlayer:

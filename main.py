@@ -5,8 +5,8 @@ from tkinter.filedialog import askopenfilename, asksaveasfile
 
 from view.main_gui import MainGUI
 from model.pose_manager import PoseManager, Pose
-from model.mediapipe_detector_v2 import MediaPipeHolisticDetector
-from model.openpose_detector import OpenPoseDetector
+from model.pose_detector_mediapipe import MediaPipeHolisticDetector
+from model.pose_detector_openpose import OpenPoseDetector
 from model.emotional_state_classifier import EmotionalStateClassifier
 from model.pose_determinator import PoseDeterminator
 

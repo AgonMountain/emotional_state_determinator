@@ -1,7 +1,7 @@
 import tkinter as tk
-from view.img_player import ImgPlayer
-from view.web_cam_player import WebCamPlayer
-from view.constructor_player import ConstructorPlayer
+from view.image_player import ImgPlayer
+from view.image_web_cam_player import WebCamPlayer
+from view.pose_constructor_player import ConstructorPlayer
 from view.control_player import ControlPlayer
 
 from config.config import APP_WIDTH, APP_HEIGHT, PLAYER_HEIGHT, PLAYER_WIDTH
