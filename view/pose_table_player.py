@@ -18,6 +18,8 @@ class PoseTablePlayer:
         self.__bt_delete = tk.Button(self.__frame_control_panel, text="Удалить", state='disabled',
                                      command=self.__delete_pose)
 
+        self.__label_all_pose_number = tk.Label(self.__frame_control_panel, text="Количество поз: 0")
+
         self.__frame_table = tk.Frame(window, height=player_height, width=player_width)
         self.table = ttk.Treeview(self.__frame_table, selectmode='browse')
         self.table.pack(side=tk.LEFT)
@@ -54,7 +56,10 @@ class PoseTablePlayer:
         self.__bt_create.place(x=200, y=0)
         self.__bt_update.place(x=400, y=0)
         self.__bt_delete.place(x=600, y=0)
-        self.__frame_table.place(x=0, y=50)
+
+        self.__label_all_pose_number.place(x=0, y=50)
+
+        self.__frame_table.place(x=0, y=100)
 
     def reload_table(self):
         self.table.delete(*self.table.get_children())
@@ -70,6 +75,7 @@ class PoseTablePlayer:
                                       pose.get_pose_description(),
                                       pose.get_recent_change_date_time(),
                                       pose.get_pose_id()))
+        self.__label_all_pose_number.config(text=f'Количество поз: {len(self.img_list)}')
 
     def __activate_deactivate_buttons(self):
         self.__bt_create.configure(state='disabled' if self.selected_row is not None else 'normal')

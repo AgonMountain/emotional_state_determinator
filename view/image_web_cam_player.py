@@ -57,7 +57,7 @@ class WebCamPlayer:
             if int(self.end_time - self.start_time) >= 5:
                 self.bt_snapshot.config(text=("Выполнить скриншот"))
                 self.start_time = None
-                self.app.save_file(self.array_frame)
+                self.app.save_file(PIL.Image.fromarray(self.array_frame))
 
 
     def __resize_img(self, image):

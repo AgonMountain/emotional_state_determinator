@@ -7,16 +7,18 @@ from view.control_player import ControlPlayer
 from config.config import APP_WIDTH, APP_HEIGHT, PLAYER_HEIGHT, PLAYER_WIDTH
 
 
+GUI_TITLE = "Определение эмоционального состояния человека по его позе"
+
+
 class MainGUI:
 
     def __init__(self, app):
         self.app = app
-        self.active_frame = None
 
         # main
         self.window = tk.Tk()
-        self.window.title("Определение эмоционального состояния человека по его позе")
-        self.window.geometry(str(APP_WIDTH) + "x" + str(APP_HEIGHT))
+        self.window.title(GUI_TITLE)
+        self.window.geometry(f"{APP_WIDTH}x{APP_HEIGHT}")
         self.window.resizable(0, 0)
 
         # control player
@@ -28,34 +30,34 @@ class MainGUI:
         self.img_player = ImgPlayer(self.app, self.frame_img_player, PLAYER_HEIGHT, PLAYER_WIDTH)
 
         # webcam player
-        self.frame_web_cam_player = tk.Frame(self.window, height=APP_HEIGHT, width=APP_WIDTH)
+        self.frame_web_cam_player = tk.Frame(self.window, height=PLAYER_HEIGHT, width=PLAYER_WIDTH)
         self.web_cam_player = WebCamPlayer(self.app, self.frame_web_cam_player, PLAYER_HEIGHT, PLAYER_WIDTH)
 
         # constructor player
-        self.frame_constructor_player = tk.Frame(self.window,
-                                                 height=APP_HEIGHT,
-                                                 width=APP_WIDTH)
-
-        self.constructor_player = ConstructorPlayer(self.app,
-                                                    self.frame_constructor_player,
-                                                    PLAYER_HEIGHT,
-                                                    PLAYER_WIDTH)
-
-        self.pack_and_place()
+        self.frame_constructor_player = tk.Frame(self.window, height=PLAYER_HEIGHT, width=PLAYER_WIDTH)
+        self.constructor_player = ConstructorPlayer(self.app, self.frame_constructor_player, PLAYER_HEIGHT, PLAYER_WIDTH)
 
         self.active_frame = self.frame_img_player
+        self.pack_and_place()
 
     def pack_and_place(self):
         self.frame_control_player.place(x=30, y=0)
-        self.frame_img_player.place(x=30, y=100)
+        self.active_frame.place(x=30, y=100)
 
-    def set_high_quality_mode(self, b):
-        self.app.set_high_quality_mode(b)
+    def set_high_quality_mode(self, is_high_quality):
+        self.app.set_high_quality_mode(is_high_quality)
+
+    def switch_frame(self, frame_name):
+        self.active_frame.place_forget()
+        self.active_frame = frame_name
+        self.active_frame.place(x=30, y=100)
 
     def switch_player(self):
-        if self.active_frame == self.frame_web_cam_player: # stop webcam capture before switch to other player
+        # stop webcam capture before switch to other player
+        if self.active_frame == self.frame_web_cam_player:
             self.web_cam_player.start_video_capture(False)
 
+        # get from control panel what mode is active
         if self.control_player.is_constructor_input():
             self.switch_to_constructor_player()
         elif self.control_player.is_web_cam_input():
@@ -64,20 +66,14 @@ class MainGUI:
             self.switch_to_img_player()
 
     def switch_to_img_player(self):
-        self.active_frame.place_forget()
-        self.active_frame = self.frame_img_player
-        self.active_frame.place(x=30, y=100)
+        self.switch_frame(self.frame_img_player)
         self.img_player.load_img(self.app.get_original_image())
 
     def switch_to_constructor_player(self):
-        self.active_frame.place_forget()
-        self.active_frame = self.frame_constructor_player
-        self.active_frame.place(x=30, y=100)
+        self.switch_frame(self.frame_constructor_player)
 
     def switch_to_web_cam_player(self):
-        self.active_frame.place_forget()
-        self.active_frame = self.frame_web_cam_player
-        self.active_frame.place(x=30, y=100)
+        self.switch_frame(self.frame_web_cam_player)
         self.web_cam_player.start_video_capture(True)
 
     def save_file(self):

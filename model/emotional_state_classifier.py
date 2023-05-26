@@ -115,14 +115,16 @@ class EmotionalStateClassifier:
                     similar_pose_list = self.__check_conflict(hot_angels, similar_pose_list)
                     # несколько cold поз имеют одинаковую приближенность к hot позе
                     if len(similar_pose_list) > 1:
-                        state = 'Ошибка - Конфликт'
+                        state = 'Ошибка'
+                        comment = 'Конфликт'
                     else:
                         state = similar_pose_list[0].state
                 elif len(similar_pose_list) == 1:
                     state = similar_pose_list[0].state
                     comment = f'id позы: {(similar_pose_list[0].pose_id)}'
             else:
-                state = 'Ошибка - Пустая база'
+                state = 'Ошибка'
+                comment = 'Пустая база'
 
             # state = similar_pose_list.get_state()
 

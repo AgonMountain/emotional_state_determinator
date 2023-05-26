@@ -39,12 +39,12 @@ class PoseDrawer:
             self.__ellipse(cartage, internal_fill=self.body_color)
 
     def __draw_body(self, b):
-        # simple face
-        self.__draw_line(b, 'right_ear', 'right_eye')
-        self.__draw_line(b, 'right_eye', 'nose')
-        self.__draw_line(b, 'nose', 'left_eye')
-        self.__draw_line(b, 'left_eye', 'left_ear')
-        self.__draw_line(b, 'left_mouth', 'right_mouth')
+        # # simple face
+        # self.__draw_line(b, 'right_ear', 'right_eye')
+        # self.__draw_line(b, 'right_eye', 'nose')
+        # self.__draw_line(b, 'nose', 'left_eye')
+        # self.__draw_line(b, 'left_eye', 'left_ear')
+        # self.__draw_line(b, 'left_mouth', 'right_mouth')
         # body
         self.__draw_line(b, 'left_ankle', 'left_knee')
         self.__draw_line(b, 'left_knee', 'left_hip')
@@ -86,9 +86,9 @@ class PoseDrawer:
 
         if pose['body'] is not None:
             self.__draw_body(pose['body'])
-        if pose['left_hand'] is not None:
-            self.__draw_hands(pose['left_hand'])
-        if pose['right_hand'] is not None:
-            self.__draw_hands(pose['right_hand'])
+        # if pose['left_hand'] is not None:
+        #     self.__draw_hands(pose['left_hand'])
+        # if pose['right_hand'] is not None:
+        #     self.__draw_hands(pose['right_hand'])
 
         return self.img

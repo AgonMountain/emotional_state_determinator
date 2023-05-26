@@ -17,7 +17,7 @@ class ControlPlayer:
         # filepath frame
         self.__frame_file = tk.Frame(window, height=player_height, width=player_width)
         self.__label_path_to_file = tk.Label(self.__frame_file, text="Путь к файлу")
-        self.__entry_path_to_file = tk.Entry(self.__frame_file, justify="left", width=70, state="readonly")
+        self.__entry_path_to_file = tk.Entry(self.__frame_file, justify="left", width=60, state="readonly")
         self.__bt_select_file = tk.Button(self.__frame_file, text="Выбрать", command=self.__open_file)
         self.__bt_switch_to_web_cam = tk.Button(self.__frame_file, text="Включить захват с камеры",
                                                 command=self.__switch_to_web_cam)
@@ -36,7 +36,7 @@ class ControlPlayer:
         self.__frame_file.place(x=0, y=0)
         self.__label_path_to_file.place(x=0, y=25)
         self.__entry_path_to_file.place(x=100, y=25)
-        self.__bt_select_file.place(x=670, y=25)
+        self.__bt_select_file.place(x=650, y=25)
         self.__bt_switch_to_web_cam.place(x=765, y=25)
         self.__frame_controls.place(x=0, y=65)
         self.__bt_switch_to_constructor.place(x=0, y=0)
@@ -47,6 +47,7 @@ class ControlPlayer:
     def activate_deactivate_buttons(self):
         self.__bt_classify['state'] = 'normal' if self.__file_path != "" or self.__is_web_cam_input else 'disabled'
         self.__bt_save['state'] = 'normal' if self.__file_path != "" and self.is_classified() else 'disabled'
+        self.__bt_select_file['state'] = 'normal' if not self.__is_web_cam_input else 'disabled'
 
     def __update_file_path_field(self, file_path):
         self.__entry_path_to_file.config(state="normal")
@@ -69,12 +70,13 @@ class ControlPlayer:
         self.__app.save_file()
 
     def __switch_to_web_cam(self):
-        self.__bt_switch_to_web_cam.config(text="Отключить захват с веб-камеры" if not self.__is_web_cam_input
-                                                else "Включить захват с веб-камеры")
+        text = "Отключить захват с камеры" if not self.__is_web_cam_input else "Включить захват с камеры"
+        self.__bt_switch_to_web_cam.config(text=text)
         self.__is_web_cam_input = True if not self.__is_web_cam_input else False
-        self.__update_file_path_field("Захват с веб-камеры" if self.__is_web_cam_input else self.__file_path)
+        self.__update_file_path_field("Захват с камеры" if self.__is_web_cam_input else self.__file_path)
         self.__app.switch_player()
         self.__cancel_classify()
+        self.activate_deactivate_buttons()
 
     def __switch_to_constructor(self):
         self.__bt_switch_to_constructor.config(text="Выйти из конструктора" if not self.__is_constructor_input

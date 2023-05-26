@@ -130,6 +130,8 @@ class EditorPlayer:
                                                inaccuracy=inaccuracy,
                                                pose_description=pose_description)
 
+            self.pose_id = None  # clean after update
+
 
 
     def set_active_exists_pose(self, id, pil_image, state, inaccuracy, description):
