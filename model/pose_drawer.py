@@ -39,56 +39,32 @@ class PoseDrawer:
             self.__ellipse(cartage, internal_fill=self.body_color)
 
     def __draw_body(self, b):
-        # # simple face
-        # self.__draw_line(b, 'right_ear', 'right_eye')
-        # self.__draw_line(b, 'right_eye', 'nose')
-        # self.__draw_line(b, 'nose', 'left_eye')
-        # self.__draw_line(b, 'left_eye', 'left_ear')
-        # self.__draw_line(b, 'left_mouth', 'right_mouth')
-        # body
-        self.__draw_line(b, 'left_ankle', 'left_knee')
-        self.__draw_line(b, 'left_knee', 'left_hip')
-        self.__draw_line(b, 'left_hip', 'left_shoulder')
-        self.__draw_line(b, 'left_shoulder', 'right_shoulder')
-        self.__draw_line(b, 'right_shoulder', 'right_hip')
-        self.__draw_line(b, 'right_hip', 'right_knee')
-        self.__draw_line(b, 'right_knee', 'right_ankle')
-        self.__draw_line(b, 'left_hip', 'right_hip')
-        # left hand
+        # body top
+        self.__draw_line(b, 'left_shoulder', 'center_shoulder')
+        self.__draw_line(b, 'center_shoulder', 'right_shoulder')
         self.__draw_line(b, 'left_shoulder', 'left_elbow')
         self.__draw_line(b, 'left_elbow', 'left_wrist')
-        # right hand
+        self.__draw_line(b, 'left_wrist', 'left_hand')
         self.__draw_line(b, 'right_shoulder', 'right_elbow')
         self.__draw_line(b, 'right_elbow', 'right_wrist')
+        self.__draw_line(b, 'right_wrist', 'right_hand')
+        self.__draw_line(b, 'left_hip', 'left_shoulder')
+        self.__draw_line(b, 'right_shoulder', 'right_hip')
+        # body down
+        self.__draw_line(b, 'left_ankle', 'left_knee')
+        self.__draw_line(b, 'left_knee', 'left_hip')
+        self.__draw_line(b, 'right_hip', 'right_knee')
+        self.__draw_line(b, 'right_knee', 'right_ankle')
+        self.__draw_line(b, 'left_hip', 'center_hip')
+        self.__draw_line(b, 'center_hip', 'right_hip')
+        self.__draw_line(b, 'left_ankle', 'left_foot')
+        self.__draw_line(b, 'right_ankle', 'right_foot')
 
-    def __draw_hands(self, h):
-        fingers = ['index', 'middle', 'ring', 'pinky']
-
-        self.__draw_line(h, 'wrist', 'thumb_finger_cmc')
-        self.__draw_line(h, 'thumb_finger_cmc', 'thumb_finger_mcp')
-        self.__draw_line(h, 'thumb_finger_mcp', 'thumb_finger_ip')
-        self.__draw_line(h, 'thumb_finger_ip', 'thumb_finger_tip')
-
-        for f in fingers:
-            self.__draw_line(h, 'wrist', f + '_finger_mcp')
-            self.__draw_line(h, f + '_finger_mcp', f + '_finger_pip')
-            self.__draw_line(h, f + '_finger_pip', f + '_finger_dip')
-            self.__draw_line(h, f + '_finger_dip', f + '_finger_tip')
-
-    def get_skeleton(self, pose, image, body_color="white", left_hand_color="white", right_hand_color="white",
-                     hands_color="white"):
+    def get_skeleton(self, pose, image, body_color="white"):
         self.img = image
-
         self.body_color = body_color
-        self.left_hand_color = left_hand_color
-        self.right_hand_color = right_hand_color
-        self.hands_color = hands_color
 
-        if pose['body'] is not None:
-            self.__draw_body(pose['body'])
-        # if pose['left_hand'] is not None:
-        #     self.__draw_hands(pose['left_hand'])
-        # if pose['right_hand'] is not None:
-        #     self.__draw_hands(pose['right_hand'])
+        if pose is not None:
+            self.__draw_body(pose)
 
         return self.img

@@ -13,8 +13,8 @@ STATES = {
     'Очень положительное': 'green',
     'Положительное': 'green',
     'Нейтральное': 'gray',
-    'Отрицательное': 'yellow',
-    'Очень отрицательное': 'red',
+    'Очень негативное': 'red',
+    'Негативное': 'red',
     'Неизвестное': 'black',
     'Ошибка': 'black'
 }
@@ -41,3 +41,5 @@ openpose_demo = os.path.abspath(r"./openpose/openpose-1.6.0-binaries-win64-gpu-f
 openpose_img_input = os.path.abspath(r"./openpose/openpose-1.6.0-binaries-win64-gpu-flir-3d/openpose/__input/")
 openpose_img_out = os.path.abspath(r"./openpose/openpose-1.6.0-binaries-win64-gpu-flir-3d/openpose/__output/img/")
 openpose_json_out = os.path.abspath(r"./openpose/openpose-1.6.0-binaries-win64-gpu-flir-3d/openpose/__output/json/")
+
+movenet_model_path = os.path.abspath(r"./config/lite-model_movenet_singlepose_lightning_tflite_float16_4.tflite")

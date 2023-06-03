@@ -9,27 +9,23 @@ class PoseDeterminator:
         self.__high_quality_pose_detector = high_quality_pose_detector
         self.__is_high_quality_mode = False
 
-        self.__body_top_angel_list = [('right_elbow', 'right_shoulder', 'left_shoulder'),
-                                      ('right_elbow', 'right_shoulder', 'right_hip'),
-                                      ('right_wrist', 'right_elbow', 'right_shoulder'),
-                                      ('left_elbow', 'left_shoulder', 'right_shoulder'),
-                                      ('left_elbow', 'left_shoulder', 'left_hip'),
-                                      ('left_wrist', 'left_elbow', 'left_shoulder')]
+        self.__body_top_angel_list = [
+            ('right_hand', 'right_wrist', 'right_elbow'),
+            ('right_wrist', 'right_elbow', 'right_shoulder'),
+            ('right_elbow', 'right_shoulder', 'center_shoulder'),
+            ('left_hand', 'left_wrist', 'left_elbow'),
+            ('left_wrist', 'left_elbow', 'left_shoulder'),
+            ('left_elbow', 'left_shoulder', 'center_shoulder')
+        ]
 
-        self.__body_down_angel_list = [('right_shoulder', 'right_hip', 'right_knee'),
-                                       ('right_hip', 'right_knee', 'right_ankle'),
-                                       ('left_shoulder', 'left_hip', 'left_knee'),
-                                       ('left_hip', 'left_knee', 'left_ankle')]
-
-        self.__body_top_vector_list = [('right_wrist', 'right_elbow'),
-                                       ('left_wrist', 'left_elbow'),
-                                       ('right_elbow', 'right_shoulder'),
-                                       ('left_elbow', 'left_shoulder')]
-
-        self.__body_down_vector_list = [('right_hip', 'right_knee'),
-                                        ('left_hip', 'left_knee'),
-                                        ('right_knee', 'right_ankle'),
-                                        ('left_knee', 'left_ankle')]
+        self.__body_down_angel_list = [
+            ('center_hip', 'right_hip', 'right_knee'),
+            ('right_hip', 'right_knee', 'right_ankle'),
+            ('right_knee', 'right_ankle', 'right_foot'),
+            ('center_hip', 'left_hip', 'left_knee'),
+            ('left_hip', 'left_knee', 'left_ankle'),
+            ('left_knee', 'left_ankle', 'left_foot')
+        ]
 
     def set_high_quality_mode(self, is_high_quality_mode):
         if self.__high_quality_pose_detector is not None:
@@ -70,6 +66,12 @@ class PoseDeterminator:
         angle = math.degrees(math.atan2(c_y - b_y, c_x - b_x) - math.atan2(a_y - b_y, a_x - b_x))
         if angle < 0:
             angle *= -1
+        if angle > 180:
+            angle = 360 - angle
+
+        # ориентация угла, положительный угол - открытый угол, отрицательный - закрытый
+
+
         return round(angle, 2)
     #
     def __calculate_limbs_angle(self, dict, a, b, c):
@@ -77,9 +79,8 @@ class PoseDeterminator:
             return self.__calculate_vectors_angle(dict[a], dict[b], dict[c])
         return None
 
-    def __get_pose_angles(self, pose_points, crossings):
-        out_angel_list = {'body_top_angels': {}, 'body_down_angels': {},
-                          'body_top_crossings_angels': {}, 'body_down_crossings_angels': {}}
+    def __get_pose_angles(self, pose_points):
+        out_angel_list = {'body_top_angels': {}, 'body_down_angels': {}}
 
         for key, angels in {'body_top_angels': self.__body_top_angel_list.copy(),
                             'body_down_angels': self.__body_down_angel_list.copy()}.items():
@@ -95,83 +96,28 @@ class PoseDeterminator:
 
             out_angel_list[key] = dict
 
-        for key, angels in {'body_top_crossings_angels': crossings['body_top_crossings'].items(),
-                            'body_down_crossings_angels': crossings['body_down_crossings'].items()}.items():
-            dict = {}
-            for k, v in angels:
-                a = k.split(',')[2]
-                b = k.split(',')[4]
-
-                dict['angel,%s,%s,%s' % (a, '?', b)] = self.__calculate_vectors_angle(pose_points[a], v, pose_points[b])
-
-            out_angel_list[key] = dict
-
         return out_angel_list
-
-    def __get_pose_crossings(self, points):
-        out_crossing_list = {'body_top_crossings': {}, 'body_down_crossings': {}}
-
-        for key, vector_list in {'body_top_crossings': self.__body_top_vector_list.copy(),
-                                 'body_down_crossings': self.__body_down_vector_list.copy()}.items():
-            dict = {}
-            for i in range(len(vector_list)):
-                for j in range(len(vector_list)):
-
-                    j = j + i + 1
-                    if j == len(vector_list):
-                        break
-
-                    a = vector_list[i][0]
-                    b = vector_list[i][1]
-                    c = vector_list[j][0]
-                    d = vector_list[j][1]
-
-                    # проверка наличия hot точек в наборе cold точек
-                    # проверка что векторы пересекаются, а не соединяются
-                    if (a in points and b in points and c in points and d in points) and \
-                            (a != c and a != d and b != c and b != d):
-
-                        vec_a = (points[a], points[b])
-                        vec_b = (points[c], points[d])
-
-                        intersection = self.__get_vectors_intersection(vec_a, vec_b)
-
-                        if intersection is not None:
-                            dict['crossing,%s,%s,%s,%s' % (a, b, c, d)] = intersection
-
-            out_crossing_list[key] = dict
-
-        return out_crossing_list
 
 
     def __merge_dicts(self, main, additional):
-        return {**main, **additional}
+        result = None
+        if main is not None and additional is not None:
+            result = {**main, **additional}
+        else:
+            result = main if main is not None else None
+            result = additional if additional is not None else None
+        return result
 
-    def __merge_key_points(self, main_pose, additional_pose):
-        pose = {}
-
-        pose['body'] = \
-            self.__merge_dicts(main_pose['body'] if  main_pose['body'] is not None else {},
-                               additional_pose['body'] if additional_pose['body'] is not None else {})
-        pose['right_hand'] = \
-            self.__merge_dicts(main_pose['right_hand'] if main_pose['right_hand'] is not None else {},
-                               additional_pose['right_hand'] if additional_pose['right_hand'] is not None else {})
-        pose['left_hand'] = \
-            self.__merge_dicts(main_pose['left_hand'] if main_pose['left_hand'] is not None else {},
-                               additional_pose['left_hand'] if additional_pose['left_hand'] is not None else {})
-
-        return pose
 
     def determinate_pose(self, pil_image):
         pose = self.__pose_detector.detect_pose(pil_image)
 
         if self.__is_high_quality_mode:
             pose_additional = self.__high_quality_pose_detector.detect_pose(pil_image)
-            pose = self.__merge_key_points(pose, pose_additional)
+            pose = self.__merge_dicts(pose, pose_additional)
 
-        if pose['body'] is not None:
-            crossings = self.__get_pose_crossings(pose['body'])
-            angels = self.__get_pose_angles(pose['body'], crossings)
-            return pose, angels, crossings
+        if pose is not None:
+            angels = self.__get_pose_angles(pose)
+            return pose, angels
 
-        return None, None, None
+        return None, None
