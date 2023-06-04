@@ -114,7 +114,7 @@ class PoseDeterminator:
 
         if self.__is_high_quality_mode:
             pose_additional = self.__high_quality_pose_detector.detect_pose(pil_image)
-            pose = self.__merge_dicts(pose, pose_additional)
+            pose = self.__merge_dicts(pose_additional, pose)
 
         if pose is not None:
             angels = self.__get_pose_angles(pose)

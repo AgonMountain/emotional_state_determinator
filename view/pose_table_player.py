@@ -6,6 +6,9 @@ import tkinter as tk
 from tkinter import messagebox
 import textwrap
 
+from config.config import MAX_POSE_NUMBER
+
+
 class PoseTablePlayer:
 
     def __init__(self, constructor_app, window, player_height, player_width):
@@ -24,7 +27,7 @@ class PoseTablePlayer:
         self.__bt_delete = tk.Button(self.__frame_control_panel, text="Удалить выбранную", state='disabled',
                                      command=self.__delete_pose)
 
-        self.__label_all_pose_number = tk.Label(self.__frame_control_panel, text="Количество поз: 0 / 50")
+        self.__label_all_pose_number = tk.Label(self.__frame_control_panel, text=f"Количество поз: 0 / {MAX_POSE_NUMBER}")
 
         self.__frame_table = tk.Frame(window, height=player_height, width=player_width)
         self.table = ttk.Treeview(self.__frame_table, selectmode='browse')
@@ -56,6 +59,7 @@ class PoseTablePlayer:
         self.reload_table()
 
         self.__pack_and_place()
+        self.__activate_deactivate_buttons()
 
     def __pack_and_place(self):
         self.__frame_control_panel.place(x=0, y=10)
@@ -97,7 +101,7 @@ class PoseTablePlayer:
                                       self.comment(pose.get_pose_description()),
                                       pose.get_recent_change_date_time().replace(' ', '\n'),
                                       pose.get_pose_id()))
-        self.__label_all_pose_number.config(text=f'Количество заданных поз: {len(self.img_list)} / 50')
+        self.__label_all_pose_number.config(text=f'Количество заданных поз: {len(self.__constructor_app.get_poses())} / {MAX_POSE_NUMBER}')
 
     def comment(self, text):
         str = ''
@@ -116,6 +120,7 @@ class PoseTablePlayer:
 
     def __activate_deactivate_buttons(self):
         self.__bt_create.configure(state='disabled' if self.selected_row is not None else 'normal')
+        self.__bt_create.configure(state='disabled' if len(self.__constructor_app.get_poses()) >= MAX_POSE_NUMBER else 'normal')
         self.__bt_delete.configure(state='normal' if self.selected_row is not None else 'disabled')
         self.__bt_update.configure(state='normal' if self.selected_row is not None else 'disabled')
 

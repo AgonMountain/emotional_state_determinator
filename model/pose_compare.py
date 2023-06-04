@@ -114,16 +114,3 @@ class PoseCompare:
         x = self.__q(body_percentage_dict.values())
         a = x * t
         return a
-
-
-
-
-if __name__ == '__main__':
-
-    d = PoseCompare()
-
-    a_x, a_y = 160, 0
-    b_x, b_y = 120, 90
-    c_x, c_y = 70, 60
-
-    print(d.is_open_angel((a_x, a_y), (b_x, b_y), (c_x, c_y), 'right'))

@@ -115,40 +115,47 @@ class EditorPlayer:
 
         # if its create new pose
         if self.pose_id is None:
-            result, text = self.__constructor_app.create_pose(image=image, state=state,
-                                                              inaccuracy=inaccuracy, pose_description=pose_description)
+            result, text = self.__constructor_app.create_pose(image=image,
+                                                              state=state,
+                                                              inaccuracy=inaccuracy,
+                                                              pose_description=pose_description)
 
-            if not result and text == 'Не удалось определить позу.':
+            if not result and text == 'Не удалось определить позу':
                 messagebox.showerror("Что-то пошло не так", text)
             elif not result and ('id' in text):
                 yesno = messagebox.askquestion("Подтвердите добавление похожей позы", f"Вы действительно хотите добавить позу "
-                                                                        f"которая уже похожа с позами:{text} ?\n")
+                                                                        f"которая уже похожа с позами:\n{text}?")
                 if yesno == 'yes':
-                    self.__constructor_app.create_pose(image=image, state=state, inaccuracy=inaccuracy,
-                                                       pose_description=pose_description, forcibly_execute=True)
-            else:
-                self.__constructor_app.create_pose(image=image, state=state, inaccuracy=inaccuracy,
-                                                   pose_description=pose_description, forcibly_execute=True)
-
+                    self.__constructor_app.create_pose(image=image,
+                                                       state=state,
+                                                       inaccuracy=inaccuracy,
+                                                       pose_description=pose_description,
+                                                       forcibly_execute=True)
 
         # else its update pose
         else:
-            result, text = self.__constructor_app.update_pose(id=self.pose_id, image=image, state=state,
-                                                              inaccuracy=inaccuracy, pose_description=pose_description)
+            result, text = self.__constructor_app.update_pose(id=self.pose_id,
+                                                              image=image,
+                                                              state=state,
+                                                              inaccuracy=inaccuracy,
+                                                              pose_description=pose_description)
+            if self.pose_id is not None:
+                text = text.replace(f'id позы: {self.pose_id}', f'id позы: {self.pose_id} [редактируемая сейчас поза] ')
 
-            if not result and text == 'Не удалось определить позу.':
-                messagebox.showerror("Что-то пошло не так", text)
-            elif not result:
+            if text == 'Не удалось определить позу':
+                messagebox.showerror("Что-то пошло не так", f'{text}, попробуйте загрузить другое похожее изображение.')
+            elif not result and ('id' in text):
                 yesno = messagebox.askquestion("Подтвердите добавление похожей позы", f"Вы действительно хотите добавить позу "
-                                                                        f"которая уже похожа с позами:{text}\n")
+                                                                        f"которая уже похожа с позами:\n{text}?")
                 if yesno == 'yes':
-                    self.__constructor_app.update_pose(id=self.pose_id, image=image, state=state, inaccuracy=inaccuracy,
-                                                       pose_description=pose_description, forcibly_execute=True)
+                    self.__constructor_app.update_pose(id=self.pose_id,
+                                                       image=image,
+                                                       state=state,
+                                                       inaccuracy=inaccuracy,
+                                                       pose_description=pose_description,
+                                                       forcibly_execute=True)
 
-            if not result:
-                messagebox.showerror("Что-то пошло не так", text)
-            else:
-                self.pose_id = None  # clean after update
+                    self.pose_id = None  # clean after update
 
     def clear_editor(self):
         self.__set_editor_fields(self.__states[0], self.__inaccuracy[0], "")

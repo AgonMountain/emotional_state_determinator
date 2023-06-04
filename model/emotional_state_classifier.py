@@ -19,16 +19,12 @@ class EmotionalStateClassifier:
 
         for cold_pose in cold_pose_list:
             cold_angels = cold_pose.get_pose_angels()
-            inaccuracy = cold_pose.get_inaccuracy()
+            inaccuracy = self.__app.get_inaccuracy()[cold_pose.get_inaccuracy()]
 
             similarity_percentage = self.__comparer.compare(inaccuracy, hot_angels, cold_angels)
-            print(similarity_percentage)
+
             if similarity_percentage >= min_percent:
                 similar_pose_list.append((similarity_percentage, cold_pose))
-
-            # # TODO !!!! similarity_percentage >= (100 - cold_angels_inaccuracy)
-            # if similarity_percentage >= (100 - cold_angels_inaccuracy):
-            #     similar_pose_list.append((similarity_percentage, cold_pose))
 
         return similar_pose_list
 
@@ -72,7 +68,7 @@ class EmotionalStateClassifier:
         sum = negative_sum + positive_sum + neutral_sum
         state = 'Неизвестное'
 
-        if sum < (-0.2):
+        if sum < (-0.1):
             state = 'Отрицательное'
         elif sum <= (0.2):
             state = 'Нейтральное'
@@ -120,12 +116,12 @@ class EmotionalStateClassifier:
                     state = self.pp(similar_pose_list)
 
                     for p in similar_pose_list:
-                        comment += f'id позы: {(p[1].pose_id)}, {(p[0])}%\n'
+                        comment += f'id позы: {(p[1].pose_id)} [{(p[0])}% / 100.0%]\n'
 
 
                 elif len(similar_pose_list) == 1:
                     state = similar_pose_list[0][1].state
-                    comment = f'id позы: {(similar_pose_list[0][1].pose_id)}, {(similar_pose_list[0][0])}%'
+                    comment = f'id позы: {(similar_pose_list[0][1].pose_id)} [{(similar_pose_list[0][0])}% / 100.0%]'
             else:
                 state = 'Неизвестное'
                 comment = 'В базе данных\nотсутствуют позы\nдля сравнения'

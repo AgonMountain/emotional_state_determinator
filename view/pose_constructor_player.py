@@ -67,14 +67,11 @@ class ConstructorPlayer:
         self.__switch_to_editor()
         pose_image, pose_data = self.get_pose(pose_id)
 
-        inaccuracy = self.app.get_inaccuracy()
-        inaccuracy = list(inaccuracy.keys())[list(inaccuracy.values()).index(pose_data.inaccuracy)]
-
         self.editor.set_active_exists_pose(id=pose_id,
                                            pil_image=pose_image,
                                            state=pose_data.state,
                                            description=pose_data.pose_description,
-                                           inaccuracy=inaccuracy)
+                                           inaccuracy=pose_data.inaccuracy)
 
     def go_to_create_pose(self):
         self.__switch_to_editor()

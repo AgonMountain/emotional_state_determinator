@@ -79,30 +79,30 @@ class App:
         hot_image, hot_state, hot_angels, hot_comment = self.classify_pose(image)
 
         if hot_angels is None:
-            return False, 'Не удалость найти позу.'
-        elif hot_state != 'Неизвестно' and not forcibly_execute:
-            hot_comment = hot_comment.replace('\n', ' ')
+            return False, 'Не удалость найти позу'
+        elif hot_state != 'Неизвестное' and not forcibly_execute:
             return False, hot_comment
         else:
-            self.__pose_manager.create_pose(image=image, state=state, pose_angels=hot_angels,
-                                            inaccuracy=self.__inaccuracy[inaccuracy], pose_description=pose_description)
-
+            self.__pose_manager.create_pose(image=image,
+                                            state=state,
+                                            pose_angels=hot_angels,
+                                            inaccuracy=inaccuracy,
+                                            pose_description=pose_description)
             return True, ''
 
     def update_pose(self, id, image, state, inaccuracy, description, forcibly_execute=False):
-        img, state, hot_angels, comment = self.classify_pose(image) # TODO st и state, если существует похожая то возвращаем False
+        hot_image, hot_state, hot_angels, hot_comment = self.classify_pose(image)
 
         if hot_angels is None:
-            return False, 'Не удалость найти позу.'
-        elif state != 'Неизвестно' and not forcibly_execute:
-            comment = comment.replace('\n', ' ')
-            return False, comment
+            return False, 'Не удалость найти позу'
+        elif hot_state != 'Неизвестное' and not forcibly_execute:
+            return False, hot_comment
         else:
             self.__pose_manager.update_pose(id=id,
                                             image=image,
                                             state=state,
                                             pose_angels=hot_angels,
-                                            inaccuracy=self.__inaccuracy[inaccuracy],
+                                            inaccuracy=inaccuracy,
                                             description=description)
             return True, ''
 

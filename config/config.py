@@ -24,6 +24,8 @@ INACCURACY = {
     'Высокий': 15
 }
 
+MAX_POSE_NUMBER = 20
+
 # ссылки на позы и папку с картинками поз
 POSE_DATA_JSON = os.path.abspath(r"./config/poses.json")
 POSE_IMAGES_FOLDER = os.path.abspath(r"./config/pose_images/")

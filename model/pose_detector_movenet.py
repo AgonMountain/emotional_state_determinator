@@ -54,7 +54,7 @@ class MoveNetDetector:
         y_max = max(p1[1], p2[1])
         return ((x_min + (x_max - x_min) / 2), y_min + ((y_max - y_min) / 2))
 
-    def __convert_body_keypoints(self, keypoints_with_scores):
+    def __convert_body_keypoints(self, keypoints_with_scores, image_width, image_height):
         dict = {}
         for k, v in self.KEYPOINT_DICT.items():
             if keypoints_with_scores[v][2] >= self.min_detection_confidence:
@@ -69,7 +69,17 @@ class MoveNetDetector:
                 keypoints_with_scores[12][2] >= self.min_detection_confidence:
             dict['center_hip'] = self.__get_center_of((round(keypoints_with_scores[11][1], 2), round(keypoints_with_scores[11][0], 2)),
                                                       (round(keypoints_with_scores[12][1], 2), round(keypoints_with_scores[12][0], 2)),)
-        return dict
+        out = {}
+        for key, val in dict.items():
+            x = val[0]
+            y = val[1]
+            # x = round(val[0] * image_width, 2)
+            # y = round(val[1] * image_height, 2)
+            # проверка, является то точка предсказанной (находится за пределами изображения)
+            if (image_width >= x >= 0) and (image_height >= y >= 0):
+                out[key] = (x, y)
+
+        return out
 
     def detect_pose(self, pil_image):
         # Reshape image
@@ -95,7 +105,7 @@ class MoveNetDetector:
         xy_keypoints = cv2.transform(np.array([xy_keypoints]), M_inv)[0]
         keypoints_with_scores = np.hstack((xy_keypoints, keypoints_with_scores[:, 2:]))
 
-        result = self.__convert_body_keypoints(keypoints_with_scores)
+        result = self.__convert_body_keypoints(keypoints_with_scores, orig_h, orig_w)
         print(f'{self.__get_actual_date_time()} MoveNet Detector: {result}')
         return result
 
