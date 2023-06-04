@@ -7,6 +7,7 @@ from view.main_gui import MainGUI
 from model.pose_manager import PoseManager, Pose
 from model.pose_detector_mediapipe import MediaPipeHolisticDetector
 from model.pose_detector_openpose import OpenPoseDetector
+from model.pose_detector_movenet import MoveNetDetector
 from model.emotional_state_classifier import EmotionalStateClassifier
 from model.pose_determinator import PoseDeterminator
 
@@ -21,8 +22,8 @@ class App:
         self.__file_path = None
         self.__original_image = None
 
-        self.__pose_detector_main = MediaPipeHolisticDetector()
-        self.__pose_detector_additional = OpenPoseDetector()
+        self.__pose_detector_main = MediaPipeHolisticDetector(0.5)
+        self.__pose_detector_additional = MoveNetDetector(0.5)
         self.__pose_determinator = PoseDeterminator(self.__pose_detector_main, self.__pose_detector_additional)
         self.__emotional_state_classifier = EmotionalStateClassifier(self, self.__pose_determinator)
         self.__pose_manager = PoseManager(POSE_DATA_JSON)
@@ -74,26 +75,36 @@ class App:
     def get_inaccuracy(self):
         return self.__inaccuracy
 
-    def create_pose(self, image, state, inaccuracy, pose_description):
-        img, st, data = self.classify_pose(image)   # TODO st и state, если существует похожая то возвращаем False
+    def create_pose(self, image, state, inaccuracy, pose_description, forcibly_execute=False):
+        hot_image, hot_state, hot_angels, hot_comment = self.classify_pose(image)
 
-        self.__pose_manager.create_pose(image=image,
-                                        state=state,
-                                        pose_angels=data['angels'],
-                                        pose_crossings=data['crossings'],
-                                        inaccuracy=self.__inaccuracy[inaccuracy],
-                                        pose_description=pose_description)
+        if hot_angels is None:
+            return False, 'Не удалость найти позу.'
+        elif hot_state != 'Неизвестно' and not forcibly_execute:
+            hot_comment = hot_comment.replace('\n', ' ')
+            return False, hot_comment
+        else:
+            self.__pose_manager.create_pose(image=image, state=state, pose_angels=hot_angels,
+                                            inaccuracy=self.__inaccuracy[inaccuracy], pose_description=pose_description)
 
-    def update_pose(self, id, image, state, inaccuracy, description):
-        img, st, data = self.classify_pose(image) # TODO st и state, если существует похожая то возвращаем False
+            return True, ''
 
-        self.__pose_manager.update_pose(id=id,
-                                        image=image,
-                                        state=state,
-                                        pose_angels=data['angels'],
-                                        pose_crossings=data['crossings'],
-                                        inaccuracy=self.__inaccuracy[inaccuracy],
-                                        description=description)
+    def update_pose(self, id, image, state, inaccuracy, description, forcibly_execute=False):
+        img, state, hot_angels, comment = self.classify_pose(image) # TODO st и state, если существует похожая то возвращаем False
+
+        if hot_angels is None:
+            return False, 'Не удалость найти позу.'
+        elif state != 'Неизвестно' and not forcibly_execute:
+            comment = comment.replace('\n', ' ')
+            return False, comment
+        else:
+            self.__pose_manager.update_pose(id=id,
+                                            image=image,
+                                            state=state,
+                                            pose_angels=hot_angels,
+                                            inaccuracy=self.__inaccuracy[inaccuracy],
+                                            description=description)
+            return True, ''
 
     def delete_pose(self, pose_id):
         self.__pose_manager.delete_pose(pose_id=pose_id)

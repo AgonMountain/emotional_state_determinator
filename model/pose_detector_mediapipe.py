@@ -1,3 +1,5 @@
+import datetime
+
 import cv2
 import mediapipe as mp
 import numpy
@@ -68,4 +70,9 @@ class MediaPipeHolisticDetector:
         image_height, image_width, _ = nparray_image.shape
         results = self.__holistic.process(cv2.cvtColor(nparray_image, cv2.COLOR_BGR2RGB))
 
-        return self.__convert_body_keypoints(results.pose_landmarks, image_width, image_height)
+        result = self.__convert_body_keypoints(results.pose_landmarks, image_width, image_height)
+        print(f'{self.__get_actual_date_time()} MediaPipe Detector: {result}')
+        return result
+
+    def __get_actual_date_time(self):
+        return '{date:%d-%m-%Y %H:%M:%S}'.format(date=datetime.datetime.now())

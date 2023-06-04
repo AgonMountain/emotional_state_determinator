@@ -105,7 +105,7 @@ class WebCamPlayer:
             self.array_frame = frame
 
             if self.is_detected:
-                detected_img_array, label, data = self.app.classify_pose(Image.fromarray(frame))
+                detected_img_array, state, hot_angels, comment = self.app.classify_pose(Image.fromarray(frame))
                 frame = detected_img_array
                 self.array_frame = numpy.asarray(detected_img_array)
             else:

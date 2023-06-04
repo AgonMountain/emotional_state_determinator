@@ -40,6 +40,9 @@ class ConstructorPlayer:
     def pack_and_place(self):
         self.active_frame.place(x=0, y=0)
 
+    def is_active_editor_player(self):
+        return self.active_frame == self.frame_editor
+
     def switch_to_table(self):
         self.active_frame.place_forget()
         self.active_frame = self.frame_pose_table_player
@@ -47,6 +50,7 @@ class ConstructorPlayer:
 
     def __switch_to_editor(self):
         self.active_frame.place_forget()
+        self.editor.clear_editor()
         self.active_frame = self.frame_editor
         self.active_frame.place(x=0, y=0)
 
@@ -78,26 +82,32 @@ class ConstructorPlayer:
     def cancel_edit_pose(self):
         self.switch_to_table()
 
-    def create_pose(self, image, state, inaccuracy, pose_description):
+    def create_pose(self, image, state, inaccuracy, pose_description, forcibly_execute=False):
 
-        self.app.create_pose(image=image,
-                             state=state,
-                             inaccuracy=inaccuracy,
-                             pose_description=pose_description)
+        result, text = self.app.create_pose(image=image,
+                                            state=state,
+                                            inaccuracy=inaccuracy,
+                                            pose_description=pose_description,
+                                            forcibly_execute=forcibly_execute)
+        if result:
+            self.pose_table_player.reload_table()
+            self.switch_to_table()
 
-        self.pose_table_player.reload_table()
-        self.switch_to_table()
+        return result, text
 
-    def update_pose(self, id, image, state, inaccuracy, pose_description):
+    def update_pose(self, id, image, state, inaccuracy, pose_description, forcibly_execute=False):
 
-        self.app.update_pose(id=id,
-                             image=image,
-                             state=state,
-                             inaccuracy=inaccuracy,
-                             description=pose_description)
+        result, text = self.app.update_pose(id=id,
+                                            image=image,
+                                            state=state,
+                                            inaccuracy=inaccuracy,
+                                            description=pose_description,
+                                            forcibly_execute=forcibly_execute)
+        if result:
+            self.pose_table_player.reload_table()
+            self.switch_to_table()
 
-        self.pose_table_player.reload_table()
-        self.switch_to_table()
+        return result, text
 
     def delete_pose(self, pose_id):
         self.app.delete_pose(pose_id)

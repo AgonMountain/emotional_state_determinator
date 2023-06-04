@@ -1,3 +1,5 @@
+import datetime
+
 import PIL.Image
 import tensorflow as tf
 import numpy as np
@@ -93,4 +95,9 @@ class MoveNetDetector:
         xy_keypoints = cv2.transform(np.array([xy_keypoints]), M_inv)[0]
         keypoints_with_scores = np.hstack((xy_keypoints, keypoints_with_scores[:, 2:]))
 
-        return self.__convert_body_keypoints(keypoints_with_scores)
+        result = self.__convert_body_keypoints(keypoints_with_scores)
+        print(f'{self.__get_actual_date_time()} MoveNet Detector: {result}')
+        return result
+
+    def __get_actual_date_time(self):
+        return '{date:%d-%m-%Y %H:%M:%S}'.format(date=datetime.datetime.now())

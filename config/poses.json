@@ -1,1 +1,74 @@
-{"poses": [{"pose": {"pose_id": 1, "state": "\u041e\u0447\u0435\u043d\u044c \u043e\u0442\u0440\u0438\u0446\u0430\u0442\u0435\u043b\u044c\u043d\u043e\u0435", "img_name": "1.png", "pose_angels": {"body_top_angels": {"angel,right_elbow,right_shoulder,left_shoulder": 103.18, "angel,right_elbow,right_shoulder,right_hip": 22.99, "angel,right_wrist,right_elbow,right_shoulder": 49.4, "angel,left_elbow,left_shoulder,right_shoulder": 262.28, "angel,left_elbow,left_shoulder,left_hip": 18.65, "angel,left_wrist,left_elbow,left_shoulder": 49.1}, "body_down_angels": {}, "body_top_crossings_angels": {"angel,right_elbow,?,left_elbow": 119.4}, "body_down_crossings_angels": {}}, "pose_crossings": {"body_top_crossings": {"crossing,right_wrist,right_elbow,left_wrist,left_elbow": [374.76, 313.81]}, "body_down_crossings": {}}, "inaccuracy": 25, "pose_description": "\u043f\u043e\u0437\u0430", "recent_change_date_time": "\u0421\u043e\u0437\u0434\u0430\u043d\u043e: 11-05-2023 15:43:19"}}]}
+{
+  "poses": [
+    {
+      "pose": {
+        "pose_id": 1,
+        "state": "Нейтральное",
+        "img_name": "1.png",
+        "pose_angels": {
+          "body_top_angels": {
+            "angel,right_hand,right_wrist,right_elbow": 142.82,
+            "angel,right_wrist,right_elbow,right_shoulder": 43.11,
+            "angel,right_elbow,right_shoulder,center_shoulder": 102.71,
+            "angel,left_hand,left_wrist,left_elbow": 136.85,
+            "angel,left_wrist,left_elbow,left_shoulder": 36.78,
+            "angel,left_elbow,left_shoulder,center_shoulder": 102.27
+          },
+          "body_down_angels": {}
+        },
+        "inaccuracy": 5,
+        "pose_description": "",
+        "recent_change_date_time": "Создано: 04-06-2023 01:43:46"
+      }
+    },
+    {
+      "pose": {
+        "pose_id": 2,
+        "state": "Положительное",
+        "img_name": "2.png",
+        "pose_angels": {
+          "body_top_angels": {
+            "angel,right_hand,right_wrist,right_elbow": 175.29,
+            "angel,right_wrist,right_elbow,right_shoulder": 161.66,
+            "angel,right_elbow,right_shoulder,center_shoulder": 74.24,
+            "angel,left_hand,left_wrist,left_elbow": 171.09,
+            "angel,left_wrist,left_elbow,left_shoulder": 159.42,
+            "angel,left_elbow,left_shoulder,center_shoulder": 79.09
+          },
+          "body_down_angels": {
+            "angel,center_hip,right_hip,right_knee": 123.08,
+            "angel,right_hip,right_knee,right_ankle": 6.79,
+            "angel,right_knee,right_ankle,right_foot": 162.7,
+            "angel,center_hip,left_hip,left_knee": 150.91,
+            "angel,left_hip,left_knee,left_ankle": 3.14,
+            "angel,left_knee,left_ankle,left_foot": 154.17
+          }
+        },
+        "inaccuracy": 10,
+        "pose_description": "",
+        "recent_change_date_time": "Обновлено: 04-06-2023 02:20:54"
+      }
+    },
+    {
+      "pose": {
+        "pose_id": 3,
+        "state": "Нейтральное",
+        "img_name": "3.png",
+        "pose_angels": {
+          "body_top_angels": {
+            "angel,right_hand,right_wrist,right_elbow": 142.82,
+            "angel,right_wrist,right_elbow,right_shoulder": 43.11,
+            "angel,right_elbow,right_shoulder,center_shoulder": 102.71,
+            "angel,left_hand,left_wrist,left_elbow": 136.85,
+            "angel,left_wrist,left_elbow,left_shoulder": 36.78,
+            "angel,left_elbow,left_shoulder,center_shoulder": 102.27
+          },
+          "body_down_angels": {}
+        },
+        "inaccuracy": 10,
+        "pose_description": "",
+        "recent_change_date_time": "Создано: 04-06-2023 02:28:14"
+      }
+    }
+  ]
+}

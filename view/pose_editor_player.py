@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from view.image_player import ImgPlayer
+from tkinter import messagebox
 
 
 class EditorPlayer:
@@ -22,22 +23,19 @@ class EditorPlayer:
         self.label_description = tk.Label(self.frame_description, text='Описание позы:')
         self.text_description = tk.Text(self.frame_description, width=int(width/10), height=3, wrap=tk.WORD)
 
-        self.frame_image_player = tk.Frame(self.frame_editor,
-                                           height=self.img_player_height+30, width=self.img_player_width+20)
+        self.frame_image_player = tk.Frame(self.frame_editor, height=self.img_player_height+30, width=self.img_player_width+20)
         self.img_canvas = tk.Canvas(self.frame_image_player, width=self.img_player_width, height=self.img_player_height)
         self.img_canvas.create_rectangle(0, 0, self.img_player_width, self.img_player_height, fill='black')
         self.img_player = ImgPlayer(self.__constructor_app, self.img_canvas, self.img_player_height, self.img_player_width)
 
         self.frame_emotional_state = tk.Frame(self.frame_editor, height=60, width=175)
         self.label_emotional_state = tk.Label(self.frame_emotional_state, text='Оценка состояния:')
-        self.field_emotional_state = ttk.Combobox(self.frame_emotional_state, values=self.__states, width=18,
-                                                  state='readonly')
+        self.field_emotional_state = ttk.Combobox(self.frame_emotional_state, values=self.__states[:3], width=18, state='readonly')
         self.field_emotional_state.set(self.__states[0])
 
-        self.frame_inaccuracy = tk.Frame(self.frame_editor, height=60, width=175)
-        self.label_inaccuracy = tk.Label(self.frame_inaccuracy, text='Уровень неточности:')
-        self.field_inaccuracy = ttk.Combobox(self.frame_inaccuracy, values=self.__inaccuracy, width=18,
-                                                  state='readonly')
+        self.frame_inaccuracy = tk.Frame(self.frame_editor, height=90, width=175)
+        self.label_inaccuracy = tk.Label(self.frame_inaccuracy, text='Уровень погрешности\nпри сравнении:')
+        self.field_inaccuracy = ttk.Combobox(self.frame_inaccuracy, values=self.__inaccuracy, width=18, state='readonly')
         self.field_inaccuracy.set(self.__inaccuracy[0])
 
         self.bt_save = tk.Button(self.frame_editor, text='Сохранить изменения', command=self.__save)
@@ -53,8 +51,8 @@ class EditorPlayer:
         self.frame_editor.place(x=0, y=0)
         self.frame_description.place(x=0, y=0)
         self.frame_image_player.place(x=0, y=self.frame_description['height'])
-        self.frame_emotional_state.place(x=self.frame_image_player['width'], y=self.frame_description['height'])
-        self.frame_inaccuracy.place(x=self.frame_image_player['width'], y=self.frame_description['height']+70)
+        self.frame_emotional_state.place(x=self.frame_image_player['width'], y=self.frame_description['height']+90)
+        self.frame_inaccuracy.place(x=self.frame_image_player['width'], y=self.frame_description['height']+170)
 
         self.img_canvas.place(x=0, y=0)
 
@@ -65,7 +63,7 @@ class EditorPlayer:
         self.field_emotional_state.place(x=0, y=30)
 
         self.label_inaccuracy.place(x=0, y=0)
-        self.field_inaccuracy.place(x=0, y=30)
+        self.field_inaccuracy.place(x=0, y=50)
 
         self.label_description.place(x=0, y=0)
         self.text_description.place(x=0, y=30)
@@ -106,10 +104,9 @@ class EditorPlayer:
                                      self.pose_description)
         # else its create new pose
         else:
-            self.__set_editor_fields(self.__states[0], self.__inaccuracy[0], "")
+            self.clear_editor()
 
     def __save(self):
-
         image = self.img_player.get_img()
 
         pose_description = self.text_description.get("1.0", tk.END).replace('\n', '')
@@ -118,21 +115,44 @@ class EditorPlayer:
 
         # if its create new pose
         if self.pose_id is None:
-            self.__constructor_app.create_pose(image=image,
-                                               state=state,
-                                               inaccuracy=inaccuracy,
-                                               pose_description=pose_description)
+            result, text = self.__constructor_app.create_pose(image=image, state=state,
+                                                              inaccuracy=inaccuracy, pose_description=pose_description)
+
+            if not result and text == 'Не удалось определить позу.':
+                messagebox.showerror("Что-то пошло не так", text)
+            elif not result and ('id' in text):
+                yesno = messagebox.askquestion("Подтвердите добавление похожей позы", f"Вы действительно хотите добавить позу "
+                                                                        f"которая уже похожа с позами:{text} ?\n")
+                if yesno == 'yes':
+                    self.__constructor_app.create_pose(image=image, state=state, inaccuracy=inaccuracy,
+                                                       pose_description=pose_description, forcibly_execute=True)
+            else:
+                self.__constructor_app.create_pose(image=image, state=state, inaccuracy=inaccuracy,
+                                                   pose_description=pose_description, forcibly_execute=True)
+
+
         # else its update pose
         else:
-            self.__constructor_app.update_pose(id=self.pose_id,
-                                               image=image,
-                                               state=state,
-                                               inaccuracy=inaccuracy,
-                                               pose_description=pose_description)
+            result, text = self.__constructor_app.update_pose(id=self.pose_id, image=image, state=state,
+                                                              inaccuracy=inaccuracy, pose_description=pose_description)
 
-            self.pose_id = None  # clean after update
+            if not result and text == 'Не удалось определить позу.':
+                messagebox.showerror("Что-то пошло не так", text)
+            elif not result:
+                yesno = messagebox.askquestion("Подтвердите добавление похожей позы", f"Вы действительно хотите добавить позу "
+                                                                        f"которая уже похожа с позами:{text}\n")
+                if yesno == 'yes':
+                    self.__constructor_app.update_pose(id=self.pose_id, image=image, state=state, inaccuracy=inaccuracy,
+                                                       pose_description=pose_description, forcibly_execute=True)
 
+            if not result:
+                messagebox.showerror("Что-то пошло не так", text)
+            else:
+                self.pose_id = None  # clean after update
 
+    def clear_editor(self):
+        self.__set_editor_fields(self.__states[0], self.__inaccuracy[0], "")
+        self.load_image_for_new_pose(None)
 
     def set_active_exists_pose(self, id, pil_image, state, inaccuracy, description):
         self.pose_id = id

@@ -62,7 +62,7 @@ class ControlPlayer:
 
     def set_high_quality_mode(self):
         self.__is_high_quality_mode = not self.__is_high_quality_mode
-        self.__bt_high_quality_mode.config(text="Отключить режим высокого качества" if self.__is_high_quality_mode
+        self.__bt_high_quality_mode.config(text="Включить режим быстродействия" if self.__is_high_quality_mode
                                             else "Включить режим высокого качества")
         self.__app.set_high_quality_mode(self.__is_high_quality_mode)
 

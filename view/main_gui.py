@@ -57,6 +57,9 @@ class MainGUI:
         if self.active_frame == self.frame_web_cam_player:
             self.web_cam_player.start_video_capture(False)
 
+        if self.constructor_player.is_active_editor_player():
+            self.constructor_player.switch_to_table()
+
         # get from control panel what mode is active
         if self.control_player.is_constructor_input():
             self.switch_to_constructor_player()
@@ -96,7 +99,7 @@ class MainGUI:
         # image for set classified image in player
         if self.control_player.is_classified():
             if self.active_frame != self.frame_web_cam_player:
-                image, state, data = self.app.classify_pose(self.app.get_original_image())
+                image, state, hot_angels, comment = self.app.classify_pose(self.app.get_original_image())
 
         # original image for set unclassified image in player
         elif self.active_frame != self.frame_web_cam_player:

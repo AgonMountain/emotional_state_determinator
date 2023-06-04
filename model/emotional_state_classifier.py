@@ -1,7 +1,8 @@
 import math
-
 from PIL import Image, ImageFont, ImageDraw
 from model.pose_drawer import PoseDrawer
+
+from model.pose_compare import PoseCompare
 
 
 class EmotionalStateClassifier:
@@ -10,70 +11,75 @@ class EmotionalStateClassifier:
         self.__app = app
         self.__pose_determinator = pose_determinator
         self.__drawer = PoseDrawer()
+        self.__comparer = PoseCompare()
 
-    def __compare_angel(self, hot_angel, cold_angel, cold_inaccuracy):
-        return cold_angel - cold_inaccuracy < hot_angel < cold_angel + cold_inaccuracy
 
-    def __compare_pose_angels(self, hot, cold, cold_inaccuracy):
-        key_list = list(hot.keys())
+    def __compare_poses(self, hot_angels, cold_pose_list, min_percent):
+        similar_pose_list = []
 
-        for l in key_list:
-            if len(hot[l]) == len(cold[l]):
-                for k in cold[l]:
-                    if k in hot[l] and \
-                            not (self.__compare_angel(hot[l][k], cold[l][k], cold_inaccuracy)):
-                        return False
-                    if k not in hot[l]:
-                        return False
-            else:
-                return False
-
-        return True
-
-    def __compare_pose_crossings(self, hot, cold):
-        key_list = list(hot.keys())
-
-        for l in key_list:
-            if len(hot[l]) == len(cold[l]):
-                for key in hot[l]:
-                    if key not in cold[l]:
-                        return False
-        return True
-
-    def __check_conflict(self, hot_angels, cold_pose_list):
-        # проверяем похожие позы, ищем какая из похожих поз ближе
-        dict = {}
-        list = []
         for cold_pose in cold_pose_list:
             cold_angels = cold_pose.get_pose_angels()
-            for k in cold_angels:
-                maximum = max(hot_angels[k], cold_angels[k])
-                minimum = min(hot_angels[k], cold_angels[k])
-                list.append(maximum - minimum)
+            inaccuracy = cold_pose.get_inaccuracy()
 
-            key = sum(list) / len(list)
-            if key not in dict:
-                dict.setdefault(key, [])
-            dict[key].append(cold_pose)
-            list.clear()
+            similarity_percentage = self.__comparer.compare(inaccuracy, hot_angels, cold_angels)
+            print(similarity_percentage)
+            if similarity_percentage >= min_percent:
+                similar_pose_list.append((similarity_percentage, cold_pose))
 
-        # return [element] or [element, element, ...]
-        return dict[min(list(dict.keys()))]
+            # # TODO !!!! similarity_percentage >= (100 - cold_angels_inaccuracy)
+            # if similarity_percentage >= (100 - cold_angels_inaccuracy):
+            #     similar_pose_list.append((similarity_percentage, cold_pose))
 
+        return similar_pose_list
 
-    def __compare_poses(self, hot_angels, hot_crossings, cold_pose_list):
-        # проверяем все позы и ищем похожие
-        list = []
-        for cold_pose in cold_pose_list:
-            cold_angels = cold_pose.get_pose_angels()
-            cold_crossings = cold_pose.get_pose_crossings()
-            cold_angels_inaccuracy = cold_pose.get_inaccuracy()
+    def pp(self, pose_list):
+        j = sum([p[0] for p in pose_list])
 
-            if self.__compare_pose_angels(hot_angels, cold_angels, cold_angels_inaccuracy) and \
-                    self.__compare_pose_crossings(hot_crossings, cold_crossings):
-                list.append(cold_pose)
+        m_dict = {}
+        for p in pose_list:
+            m_dict[p[1]] = (p[0] / j)
 
-        return list
+        lp_dict = {}
+        for p in pose_list:
+            lp_dict[p[1]] = (2 * p[0]) - j
+        lp_min = min(lp_dict.values())
+        b = 1
+        if lp_min < 0:
+            while True:
+                b += 1
+                if (lp_min + (100 * b)) > 0:
+                    break
+
+        e_dict = {}
+        for k in m_dict.keys():
+            e_dict[k] = (m_dict[k] * (lp_dict[k] + (100 * b))) / 100
+
+        return self.iterp(e_dict)
+
+    def iterp(self, list):
+        negative_sum, positive_sum, neutral_sum = 0, 0, 0
+        for k in list.keys():
+            if k.get_state() == 'Нейтральное':
+                neutral_sum += list[k]
+            elif k.get_state() == 'Положительное':
+                positive_sum += list[k]
+            elif k.get_state() == 'Отрицательное':
+                negative_sum += (list[k] * -1)
+
+        if neutral_sum > 0.2:
+            neutral_sum = 0.2
+
+        sum = negative_sum + positive_sum + neutral_sum
+        state = 'Неизвестное'
+
+        if sum < (-0.2):
+            state = 'Отрицательное'
+        elif sum <= (0.2):
+            state = 'Нейтральное'
+        elif sum > (0.2):
+            state = 'Положительное'
+
+        return state
 
     def __modify_image(self, image, color, state, comment=None):
         # оценка состояния
@@ -92,13 +98,11 @@ class EmotionalStateClassifier:
             draw.rectangle(bbox, fill="black")
             draw.text(position, comment, font=font, fill="white")
 
-
     def classify_pose(self, pil_image):
-        hot_pose, hot_angels, hot_crossings = self.__pose_determinator.determinate_pose(pil_image)
+        hot_pose, hot_angels = self.__pose_determinator.determinate_pose(pil_image)
+        comment = ''
 
-        comment = None
-
-        if hot_pose is None and hot_angels is None and hot_crossings is None:
+        if hot_pose is None and hot_angels is None:
             state = 'Не удалось определить позу'
             color = 'pink'
             img = pil_image
@@ -108,30 +112,30 @@ class EmotionalStateClassifier:
 
             if len(cold_pose_list) > 0:
                 # поиск похожих cold поз
-                similar_pose_list = self.__compare_poses(hot_angels, hot_crossings, cold_pose_list)
+                similar_pose_list = self.__compare_poses(hot_angels, cold_pose_list, 60)
 
                 # проверка, если найдено несколько похожих cold поз
                 if len(similar_pose_list) > 1:
-                    similar_pose_list = self.__check_conflict(hot_angels, similar_pose_list)
-                    # несколько cold поз имеют одинаковую приближенность к hot позе
-                    if len(similar_pose_list) > 1:
-                        state = 'Ошибка'
-                        comment = 'Конфликт'
-                    else:
-                        state = similar_pose_list[0].state
+
+                    state = self.pp(similar_pose_list)
+
+                    for p in similar_pose_list:
+                        comment += f'id позы: {(p[1].pose_id)}, {(p[0])}%\n'
+
+
                 elif len(similar_pose_list) == 1:
-                    state = similar_pose_list[0].state
-                    comment = f'id позы: {(similar_pose_list[0].pose_id)}'
+                    state = similar_pose_list[0][1].state
+                    comment = f'id позы: {(similar_pose_list[0][1].pose_id)}, {(similar_pose_list[0][0])}%'
             else:
-                state = 'Ошибка'
-                comment = 'Пустая база'
+                state = 'Неизвестное'
+                comment = 'В базе данных\nотсутствуют позы\nдля сравнения'
 
             # state = similar_pose_list.get_state()
 
             color = self.__app.get_states()[state]
-            img = self.__drawer.get_skeleton(hot_pose, pil_image, color, color, color, color)
+            img = self.__drawer.get_skeleton(hot_pose, pil_image, color)
 
 
         self.__modify_image(img, color, state, comment)
 
-        return img, state, {"angels": hot_angels, "crossings": hot_crossings}
+        return img, state, hot_angels, comment
