@@ -1,68 +1,43 @@
 import math
+from math import *
+from shapely.geometry import Point
+from shapely.geometry.polygon import Polygon
 
 class PoseCompare:
 
     def __init__(self):
         pass
 
-    def is_open_angel(self, a, b, c, hand):
-        a_x, a_y = a[0], a[1]
-        b_x, b_y = b[0], b[1]
-        c_x, c_y = c[0], c[1]
+    def beetwen(self, a, b):
+        x1, y1 = a[0], a[1]
+        x2, y2 = b[0], b[1]
+        return sqrt( (x2 - x1)**2 + (y2 - y1)**2 )
 
-        is_open = False
+    def rotate_point(self, point, angle, center_point=(0, 0)):
+        """Rotates a point around center_point(origin by default)
+        Angle is in degrees.
+        Rotation is counter-clockwise
+        """
+        angle_rad = radians(angle % 360)
+        # Shift the point so that center_point becomes the origin
+        new_point = (point[0] - center_point[0], point[1] - center_point[1])
+        new_point = (new_point[0] * cos(angle_rad) - new_point[1] * sin(angle_rad),
+                     new_point[0] * sin(angle_rad) + new_point[1] * cos(angle_rad))
+        # Reverse the shifting we have done
+        new_point = (new_point[0] + center_point[0], new_point[1] + center_point[1])
+        return new_point
 
-        if hand == 'right':
-            # горизонтальная линия
-            if c_x <= b_x <= a_x:
-                if b_y >= min(a_y, c_y):
-                    is_open = True
-            # вертикальная линия первого типа
-            if c_y <= b_y <= a_y:
-                if b_x >= min(a_x, c_x):
-                    is_open = True
-            # вертикальная линия второго типа
-            if c_y >= b_y >= a_y:
-                if b_x <= max(a_x, c_x):
-                    is_open = True
-        elif hand == 'left':
-            # горизонтальная линия
-            if c_x <= b_x <= a_x:
-                if b_y >= max(a_y, c_y):
-                    is_open = True
-            # вертикальная линия первого типа
-            if c_y <= b_y <= a_y:
-                if b_x <= min(a_x, c_x):
-                    is_open = True
-            # вертикальная линия второго типа
-            if c_y >= b_y >= a_y:
-                if b_x >= max(a_x, c_x):
-                    is_open = True
-
-        # исключение для позы вида скрещенные руки с открытыми углами
-        if is_open:
-            if (hand == 'right' and a_x < b_x) or (hand == 'left' and a_x > b_x):
-                is_open = False
-
-        return is_open
-
-        # z = math.sqrt((b_x - a_x) ** 2 + (b_y - a_y) ** 2)
-        # w = math.sqrt((b_x - c_x) ** 2 + (b_y - c_y) ** 2)
-        # f_x, f_y = b_x + (b_x - a_x), b_y + (b_y - a_y)
-        # l = math.sqrt((f_x - c_x) ** 2 + (f_y - c_y) ** 2)
-        #
-        # a_x, a_y = a_x, a_y
-        # b_x, b_y = a_x + z, a_y
-        # f_x, f_y = b_x + w, a_y
-        # c_x, c_y = b_x + w, a_y + l
-
-        # f_x, f_y = b_x + b_c_distance, a_y
-        #
-        # a_x, a_y = a_x - 10 * b_c_distance, a_y
-        # b_x, b_y = b_x, b_y + 10 * b_c_distance
-        # f_x, f_y = f_x + 10 * b_c_distance, f_y
-        #
-        # return not self.is_point_in_triangle((a_x, a_y), (b_x, b_y), (f_x, f_y), (c_x, c_y))
+    def rotate_polygon(self, polygon, angle, center_point=(0, 0)):
+        """Rotates the given polygon which consists of corners represented as (x,y)
+        around center_point (origin by default)
+        Rotation is counter-clockwise
+        Angle is in degrees
+        """
+        rotated_polygon = []
+        for corner in polygon:
+            rotated_corner = self.rotate_point(corner, angle, center_point)
+            rotated_polygon.append(rotated_corner)
+        return rotated_polygon
 
 
     def __compare_angels(self, angel_a, angel_b):
@@ -74,6 +49,18 @@ class PoseCompare:
 
         return round((b_k * 100) / a_k, 2)
 
+    def angle(self, a, b, c):
+        a_x, a_y = a
+        b_x, b_y = b
+        c_x, c_y = c
+        angle = math.degrees(math.atan2(c_y - b_y, c_x - b_x) - math.atan2(a_y - b_y, a_x - b_x))
+        if angle < 0:
+            angle *= -1
+        if angle > 180:
+            angle = 360 - angle
+
+        return round(angle, 2)
+
     def __q(self, p_list):
         result = 1
 
@@ -81,6 +68,26 @@ class PoseCompare:
             result *= el
 
         return round((result / ((100) ** len(p_list))) * 100, 2)
+
+    def is_open_angel(self, a, b, c, hand):
+        f = (b[0] + (b[0] - a[0]), b[1] + (b[1] - a[1]))
+
+        angel = p.angle(a, b, (a[0], b[1]))
+        if hand == 'left':
+            angel *= -1
+        list = p.rotate_polygon((a, b, f, c), angel, b)
+        a = list[0]
+        b = list[1]
+        f = list[2]
+        c = list[3]
+
+        a = a[0] - 100, a[1]
+        b = b[0], b[1] + 100
+        f = f[0] + 100, f[1]
+
+        point = Point(c[0], c[1])
+        polygon = Polygon([a, b, f])
+        return not polygon.contains(point)
 
     def compare(self, inaccuracy, hot_pose_angels, cold_pose_angels):
 
@@ -114,3 +121,13 @@ class PoseCompare:
         x = self.__q(body_percentage_dict.values())
         a = x * t
         return a
+
+
+if __name__ == '__main__':
+    p = PoseCompare()
+
+    a = (140, 10)
+    b = (110, 70)
+    c = (150, 100)
+
+    print(p.is_open_angel(a, b, c, 'right'))
