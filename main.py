@@ -1,5 +1,7 @@
 import pathlib
 import datetime
+from tkinter import messagebox
+
 from PIL import Image
 from tkinter.filedialog import askopenfilename, asksaveasfile
 
@@ -38,7 +40,14 @@ class App:
 
         if self.__file_path != "":
             suf = pathlib.Path(self.__file_path).suffix.lower()
-            self.__original_image = Image.open(self.__file_path)
+
+            # битый файл изображения
+            try:
+                self.__original_image = Image.open(self.__file_path)
+            except:
+                messagebox.showerror("Что-то пошло не так", 'Не удается открыть выбранный файл с изображением.\n' +
+                                                            'Возможно выбранный файл поврежден.\n\n' +
+                                                            f'{self.__file_path}')
 
         return self.__file_path, self.__original_image.copy() if self.__original_image is not None else None
 
@@ -79,7 +88,7 @@ class App:
         hot_image, hot_state, hot_angels, hot_comment = self.classify_pose(image)
 
         if hot_angels is None:
-            return False, 'Не удалость найти позу'
+            return False, 'Не удалось найти позу'
         elif hot_state != 'Неизвестное' and not forcibly_execute:
             return False, hot_comment
         else:
@@ -94,7 +103,7 @@ class App:
         hot_image, hot_state, hot_angels, hot_comment = self.classify_pose(image)
 
         if hot_angels is None:
-            return False, 'Не удалость найти позу'
+            return False, 'Не удалось найти позу'
         elif hot_state != 'Неизвестное' and not forcibly_execute:
             return False, hot_comment
         else:

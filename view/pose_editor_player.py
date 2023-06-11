@@ -120,7 +120,7 @@ class EditorPlayer:
                                                               inaccuracy=inaccuracy,
                                                               pose_description=pose_description)
 
-            if not result and text == 'Не удалось определить позу':
+            if not result and text == 'Не удалось найти позу':
                 messagebox.showerror("Что-то пошло не так", text)
             elif not result and ('id' in text):
                 yesno = messagebox.askquestion("Подтвердите добавление похожей позы", f"Вы действительно хотите добавить позу "

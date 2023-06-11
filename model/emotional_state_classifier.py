@@ -99,7 +99,7 @@ class EmotionalStateClassifier:
         comment = ''
 
         if hot_pose is None and hot_angels is None:
-            state = 'Не удалось определить позу'
+            state = 'Не удалось найти позу'
             color = 'pink'
             img = pil_image
         else:

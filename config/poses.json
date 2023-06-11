@@ -2,163 +2,86 @@
   "poses": [
     {
       "pose": {
-        "pose_id": 3,
-        "state": "Положительное",
-        "img_name": "3.png",
-        "pose_angels": {
-          "body_top_angels": {
-            "angel,right_hand,right_wrist,right_elbow": 142.82,
-            "angel,right_wrist,right_elbow,right_shoulder": 43.11,
-            "angel,right_elbow,right_shoulder,center_shoulder": 102.71,
-            "angel,left_hand,left_wrist,left_elbow": 136.85,
-            "angel,left_wrist,left_elbow,left_shoulder": 36.78,
-            "angel,left_elbow,left_shoulder,center_shoulder": 102.27
-          },
-          "body_down_angels": {}
-        },
-        "inaccuracy": "Низкий",
-        "pose_description": "",
-        "recent_change_date_time": "Обновлено: 04-06-2023 12:13:12"
-      }
-    },
-    {
-      "pose": {
-        "pose_id": 2,
-        "state": "Положительное",
-        "img_name": "2.png",
-        "pose_angels": {
-          "body_top_angels": {
-            "angel,right_hand,right_wrist,right_elbow": 177.59,
-            "angel,right_wrist,right_elbow,right_shoulder": 177.35,
-            "angel,right_elbow,right_shoulder,center_shoulder": 175.22,
-            "angel,left_hand,left_wrist,left_elbow": 177.32,
-            "angel,left_wrist,left_elbow,left_shoulder": 176.76,
-            "angel,left_elbow,left_shoulder,center_shoulder": 177.97
-          },
-          "body_down_angels": {
-            "angel,center_hip,right_hip,right_knee": 171.63,
-            "angel,right_hip,right_knee,right_ankle": 66.16,
-            "angel,right_knee,right_ankle,right_foot": 153.09,
-            "angel,center_hip,left_hip,left_knee": 97.86,
-            "angel,left_hip,left_knee,left_ankle": 178.38,
-            "angel,left_knee,left_ankle,left_foot": 179.37
-          }
-        },
-        "inaccuracy": "Средний",
-        "pose_description": "Поза ласточкой. Пожилая женщина выполняет позу ласточкой. втваотвыоатпвшат выоташотвап  тштваытпшоватыпштваышпот  пваыотпватышоптшваоып ваытпштваышпотваоп ваышптшоватпшватпшотваы оваытпштваышоптваышотпшотп",
-        "recent_change_date_time": "Обновлено: 04-06-2023 12:14:17"
-      }
-    },
-    {
-      "pose": {
-        "pose_id": 5,
-        "state": "Положительное",
-        "img_name": "5.png",
-        "pose_angels": {
-          "body_top_angels": {
-            "angel,right_hand,right_wrist,right_elbow": 159.81,
-            "angel,right_wrist,right_elbow,right_shoulder": 57.52,
-            "angel,right_elbow,right_shoulder,center_shoulder": 122.38,
-            "angel,left_hand,left_wrist,left_elbow": 174.34,
-            "angel,left_wrist,left_elbow,left_shoulder": 159.88,
-            "angel,left_elbow,left_shoulder,center_shoulder": 98.61
-          },
-          "body_down_angels": {
-            "angel,center_hip,right_hip,right_knee": 90.43,
-            "angel,right_hip,right_knee,right_ankle": 176.27,
-            "angel,right_knee,right_ankle,right_foot": 169.84,
-            "angel,center_hip,left_hip,left_knee": 88.94,
-            "angel,left_hip,left_knee,left_ankle": 178.99,
-            "angel,left_knee,left_ankle,left_foot": 178.6
-          }
-        },
-        "inaccuracy": "Низкий",
-        "pose_description": "",
-        "recent_change_date_time": "Создано: 04-06-2023 12:17:08"
-      }
-    },
-    {
-      "pose": {
-        "pose_id": 4,
-        "state": "Отрицательное",
-        "img_name": "4.png",
-        "pose_angels": {
-          "body_top_angels": {
-            "angel,right_hand,right_wrist,right_elbow": 169.28,
-            "angel,right_wrist,right_elbow,right_shoulder": 48.03,
-            "angel,right_elbow,right_shoulder,center_shoulder": 103.18,
-            "angel,left_hand,left_wrist,left_elbow": 177.74,
-            "angel,left_wrist,left_elbow,left_shoulder": 49.1,
-            "angel,left_elbow,left_shoulder,center_shoulder": 97.72
-          },
-          "body_down_angels": {}
-        },
-        "inaccuracy": "Низкий",
-        "pose_description": "",
-        "recent_change_date_time": "Обновлено: 04-06-2023 12:28:56"
-      }
-    },
-    {
-      "pose": {
         "pose_id": 1,
         "state": "Нейтральное",
         "img_name": "1.png",
         "pose_angels": {
           "body_top_angels": {
-            "angel,right_hand,right_wrist,right_elbow": 142.82,
-            "angel,right_wrist,right_elbow,right_shoulder": 43.11,
-            "angel,right_elbow,right_shoulder,center_shoulder": 102.71,
-            "angel,left_hand,left_wrist,left_elbow": 136.85,
-            "angel,left_wrist,left_elbow,left_shoulder": 36.78,
-            "angel,left_elbow,left_shoulder,center_shoulder": 102.27
+            "angel,center_shoulder,right_shoulder,right_elbow": 142.14,
+            "angel,right_shoulder,right_elbow,right_wrist": 42.71,
+            "angel,right_elbow,right_wrist,right_hand": -169.59,
+            "angel,center_shoulder,left_shoulder,left_elbow": 136.01,
+            "angel,left_shoulder,left_elbow,left_wrist": 43.9,
+            "angel,left_elbow,left_wrist,left_hand": -177.71
           },
           "body_down_angels": {}
         },
         "inaccuracy": "Низкий",
         "pose_description": "",
-        "recent_change_date_time": "Обновлено: 04-06-2023 12:29:10"
+        "recent_change_date_time": "Создано: 11-06-2023 19:31:23"
       }
     },
     {
       "pose": {
-        "pose_id": 6,
+        "pose_id": 2,
         "state": "Нейтральное",
-        "img_name": "6.png",
+        "img_name": "2.png",
         "pose_angels": {
           "body_top_angels": {
-            "angel,right_hand,right_wrist,right_elbow": 175.38,
-            "angel,right_wrist,right_elbow,right_shoulder": 174.5,
-            "angel,right_elbow,right_shoulder,center_shoulder": 105.14,
-            "angel,left_hand,left_wrist,left_elbow": 174.23,
-            "angel,left_wrist,left_elbow,left_shoulder": 172.16,
-            "angel,left_elbow,left_shoulder,center_shoulder": 101.61
+            "angel,center_shoulder,right_shoulder,right_elbow": -137.04,
+            "angel,right_shoulder,right_elbow,right_wrist": -83.91,
+            "angel,right_elbow,right_wrist,right_hand": -151.96,
+            "angel,center_shoulder,left_shoulder,left_elbow": -139.43,
+            "angel,left_shoulder,left_elbow,left_wrist": -82.49,
+            "angel,left_elbow,left_wrist,left_hand": -152.07
           },
           "body_down_angels": {}
         },
         "inaccuracy": "Низкий",
         "pose_description": "",
-        "recent_change_date_time": "Создано: 04-06-2023 12:40:29"
+        "recent_change_date_time": "Создано: 11-06-2023 19:31:38"
       }
     },
     {
       "pose": {
-        "pose_id": 7,
+        "pose_id": 3,
         "state": "Отрицательное",
-        "img_name": "7.png",
+        "img_name": "3.png",
         "pose_angels": {
           "body_top_angels": {
-            "angel,right_hand,right_wrist,right_elbow": 176.77,
-            "angel,right_wrist,right_elbow,right_shoulder": 35.97,
-            "angel,right_elbow,right_shoulder,center_shoulder": 160.31,
-            "angel,left_hand,left_wrist,left_elbow": 172.17,
-            "angel,left_wrist,left_elbow,left_shoulder": 40.26,
-            "angel,left_elbow,left_shoulder,center_shoulder": 153.99
+            "angel,center_shoulder,right_shoulder,right_elbow": -92.22,
+            "angel,right_shoulder,right_elbow,right_wrist": -47.92,
+            "angel,right_elbow,right_wrist,right_hand": 168.43,
+            "angel,center_shoulder,left_shoulder,left_elbow": -82.33,
+            "angel,left_shoulder,left_elbow,left_wrist": -49.66,
+            "angel,left_elbow,left_wrist,left_hand": 174.17
           },
           "body_down_angels": {}
         },
         "inaccuracy": "Низкий",
         "pose_description": "",
-        "recent_change_date_time": "Создано: 04-06-2023 12:42:57"
+        "recent_change_date_time": "Создано: 11-06-2023 19:31:52"
+      }
+    },
+    {
+      "pose": {
+        "pose_id": 4,
+        "state": "Положительное",
+        "img_name": "4.png",
+        "pose_angels": {
+          "body_top_angels": {
+            "angel,center_shoulder,right_shoulder,right_elbow": -118.92,
+            "angel,right_shoulder,right_elbow,right_wrist": 48.52,
+            "angel,right_elbow,right_wrist,right_hand": 162.74,
+            "angel,center_shoulder,left_shoulder,left_elbow": -116.75,
+            "angel,left_shoulder,left_elbow,left_wrist": 35.27,
+            "angel,left_elbow,left_wrist,left_hand": 147.39
+          },
+          "body_down_angels": {}
+        },
+        "inaccuracy": "Низкий",
+        "pose_description": "",
+        "recent_change_date_time": "Создано: 11-06-2023 19:32:03"
       }
     }
   ]
